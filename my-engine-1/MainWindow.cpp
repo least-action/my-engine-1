@@ -1,6 +1,12 @@
 #include "MainWindow.h"
 
 
+MainWindow::MainWindow()
+{
+    hInstance = GetModuleHandle(NULL);
+    nCmdShow = SW_SHOWDEFAULT;
+}
+
 LRESULT CALLBACK MainWindow::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -28,9 +34,6 @@ LRESULT CALLBACK MainWindow::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPA
 
 BOOL MainWindow::Create()
 {
-    HINSTANCE hInstance = GetModuleHandle(NULL);
-    int nCmdShow = SW_SHOWDEFAULT;
-
     const wchar_t CLASS_NAME[] = L"Main Window Class";
 
     WNDCLASS wc = { };
@@ -43,7 +46,7 @@ BOOL MainWindow::Create()
     HWND hwnd = CreateWindowEx(
         0,                              // Optional window styles.
         CLASS_NAME,                     // Window class
-        L"Learn to Program Windows",    // Window text
+        L"my-engine-1",                 // Window text
         WS_OVERLAPPEDWINDOW,            // Window style
 
         // Size and position

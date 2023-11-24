@@ -2,7 +2,7 @@
 
 
 int main() {
-    MainWindow main_window{};
+    MainWindow main_window;
     main_window.Create();
 
     return 0;
