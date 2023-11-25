@@ -26,19 +26,14 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
 
-MainWindow::MainWindow()
-{
-    nCmdShow = SW_SHOWDEFAULT;
-}
-
-int MainWindow::Run()
+int MainWindow::WinMain()
 {
     if (!Create(L"my-engine-1", WS_OVERLAPPEDWINDOW))
     {
         return 0;
     }
 
-    ShowWindow(Window(), nCmdShow);
+    ShowWindow(Window(), SW_SHOWDEFAULT);
 
     // Run the message loop.
 

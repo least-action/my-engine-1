@@ -64,7 +64,7 @@ public:
 
     HWND Window() const { return m_hwnd; }
 
-public:
+protected:
     virtual PCWSTR  ClassName() const = 0;
     virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 

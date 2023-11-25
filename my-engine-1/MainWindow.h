@@ -8,9 +8,7 @@ public:
 	PCWSTR  ClassName() const { return L"Main Window Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-public:
-	MainWindow();
-	int Run();
+	int WinMain();
 
 private:
 	int nCmdShow;

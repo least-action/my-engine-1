@@ -3,7 +3,7 @@
 
 int main() {
     MainWindow main_window;
-    main_window.Run();
+    main_window.WinMain();
 
     return 0;
 }
