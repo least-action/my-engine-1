@@ -1,13 +1,7 @@
 #include "MainWindow.h"
 
 
-MainWindow::MainWindow()
-{
-    hInstance = GetModuleHandle(NULL);
-    nCmdShow = SW_SHOWDEFAULT;
-}
-
-LRESULT CALLBACK MainWindow::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -18,61 +12,43 @@ LRESULT CALLBACK MainWindow::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPA
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hwnd, &ps);
+        HDC hdc = BeginPaint(m_hwnd, &ps);
 
         // All painting occurs here, between BeginPaint and EndPaint.
 
         FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 
-        EndPaint(hwnd, &ps);
+        EndPaint(m_hwnd, &ps);
     }
     return 0;
 
     }
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
 
-BOOL MainWindow::Create()
+MainWindow::MainWindow()
 {
-    const wchar_t CLASS_NAME[] = L"Main Window Class";
+    nCmdShow = SW_SHOWDEFAULT;
+}
 
-    WNDCLASS wc = { };
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = hInstance;
-    wc.lpszClassName = CLASS_NAME;
-
-    RegisterClass(&wc);
-
-    HWND hwnd = CreateWindowEx(
-        0,                              // Optional window styles.
-        CLASS_NAME,                     // Window class
-        L"my-engine-1",                 // Window text
-        WS_OVERLAPPEDWINDOW,            // Window style
-
-        // Size and position
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-
-        NULL,       // Parent window    
-        NULL,       // Menu
-        hInstance,  // Instance handle
-        NULL        // Additional application data
-    );
-
-    if (hwnd == NULL)
+int MainWindow::Run()
+{
+    if (!Create(L"my-engine-1", WS_OVERLAPPEDWINDOW))
     {
         return 0;
     }
 
-    ShowWindow(hwnd, nCmdShow);
+    ShowWindow(Window(), nCmdShow);
 
     // Run the message loop.
 
     MSG msg = { };
-    while (GetMessage(&msg, NULL, 0, 0) > 0)
+    while (GetMessage(&msg, NULL, 0, 0))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 
+    return 0;
     return 0;
 }

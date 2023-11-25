@@ -1,14 +1,17 @@
-#include <windows.h>
+#pragma once
+#include "BaseWindow.h"
 
 
-class MainWindow
+class MainWindow : public BaseWindow<MainWindow>
 {
 public:
-    MainWindow();
-    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-    BOOL Create();
+	PCWSTR  ClassName() const { return L"Main Window Class"; }
+	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+public:
+	MainWindow();
+	int Run();
 
 private:
-    HINSTANCE hInstance;
-    int nCmdShow;
+	int nCmdShow;
 };
