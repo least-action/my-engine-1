@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
+    <ClInclude Include="CubeBox.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="App.h" />
   </ItemGroup>

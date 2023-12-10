@@ -1,5 +1,6 @@
 #include "App.h"
 #include "MainWindow.h"
+#include "CubeBox.h"
 
 #include <D3DCompiler.h>
 #include <directxmath.h>
@@ -176,175 +177,19 @@ HRESULT App::InitD3D()
     vp.TopLeftY = 0;
     mContext->RSSetViewports(1, &vp);
 
-    // Compile the vertex shader
-    ID3DBlob* pVSBlob = nullptr;
-    hr = CompileShader(L"vertexShader.hlsl", "main", "vs_4_0", &pVSBlob);
-    if (FAILED(hr)) {
-        printf("CompileShader error : %08X\n", hr);
-        return hr;
-    }
 
-    // Create the vertex shader
-    hr = mDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &mVertexShader);
-    if (FAILED(hr))
-    {
-        pVSBlob->Release();
-        printf("CreateVertexShader error : %08X\n", hr);
-        return hr;
-    }
-
-
-    // Define the input layout
-    D3D11_INPUT_ELEMENT_DESC layout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-    UINT numElements = ARRAYSIZE(layout);
-
-    // Create the input layout
-    hr = mDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
-        pVSBlob->GetBufferSize(), &mInputLayout);
-    pVSBlob->Release();
-    if (FAILED(hr))
-        return hr;
-
-    // Set the input layout
-    mContext->IASetInputLayout(mInputLayout);
-
-    // Compile the pixel shader
-    ID3DBlob* pPSBlob = nullptr;
-    hr = CompileShader(L"pixelShader.hlsl", "main", "ps_4_0", &pPSBlob);
-    if (FAILED(hr)) {
-        printf("CompileShader error : %08X\n", hr);
-        return hr;
-    }
-
-    // Create the pixel shader
-    hr = mDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &mPixelShader);
-    pPSBlob->Release();
-    if (FAILED(hr)) {
-        printf("CreatePixelShader error : %08X\n", hr);
-        return hr;
-    }
-
-    // Compile the pixel shader
-    pPSBlob = nullptr;
-    hr = CompileShader(L"pixelShader.hlsl", "PSSolid", "ps_4_0", &pPSBlob);
-    if (FAILED(hr))
-    {
-        printf("CompileShader error : %08X\n", hr);
-        return hr;
-    }
-
-    // Create the pixel shader
-    hr = mDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &mPixelShaderSolid);
-    pPSBlob->Release();
-    if (FAILED(hr)) {
-        printf("CreatePixelShader error : %08X\n", hr);
-        return hr;
-    }
-
-    // Create vertex buffer
-    SimpleVertex vertices[] =
-    {
-        { DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-
-        { DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
-        { DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
-
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
-        { DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
-        { DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
-        { DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
-
-        { DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
-        { DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
-        { DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
-        { DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
-    };
-
+    cubeBox.Initialize(mDevice, mContext);
+    
+    // Create the constant buffer
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 24;
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
-    D3D11_SUBRESOURCE_DATA InitData;
-    ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = vertices;
-    hr = mDevice->CreateBuffer(&bd, &InitData, &mVertexBuffer);
-    if (FAILED(hr)) {
-        printf("CreateBuffer error : %08X\n", hr);
-        return hr;
-    }
-
-    // Set vertex buffer
-    UINT stride = sizeof(SimpleVertex);
-    UINT offset = 0;
-    mContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-
-    // Create index buffer
-    WORD indices[] =
-    {
-        3,1,0,
-        2,1,3,
-
-        6,4,5,
-        7,4,6,
-
-        11,9,8,
-        10,9,11,
-
-        14,12,13,
-        15,12,14,
-
-        19,17,16,
-        18,17,19,
-
-        22,20,21,
-        23,20,22
-    };
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
-    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    bd.CPUAccessFlags = 0;
-    InitData.pSysMem = indices;
-    hr = mDevice->CreateBuffer(&bd, &InitData, &mIndexBuffer);
-    if (FAILED(hr)) {
-        printf("CreateBuffer error : %08X\n", hr);
-        return hr;
-    }
-
-    // Set index buffer
-    mContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-    // Set primitive topology
-    mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // Create the constant buffer
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof(ConstantBuffer);
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bd.CPUAccessFlags = 0;
     hr = mDevice->CreateBuffer(&bd, NULL, &mConstantBuffer);
     if (FAILED(hr)) {
-        printf("CreateBuffer error : %08X\n", hr);
+        printf("CreateBuffer(constant buffer) error : %08X\n", hr);
         return hr;
     }
 
@@ -368,12 +213,12 @@ void App::CleanupDevice()
     if (mContext) mContext->ClearState();
 
     if (mConstantBuffer) mConstantBuffer->Release();
-    if (mVertexBuffer) mVertexBuffer->Release();
-    if (mIndexBuffer) mIndexBuffer->Release();
-    if (mInputLayout) mInputLayout->Release();
-    if (mVertexShader) mVertexShader->Release();
-    if (mPixelShaderSolid) mPixelShaderSolid->Release();
-    if (mPixelShader) mPixelShader->Release();
+    // if (mVertexBuffer) mVertexBuffer->Release();
+    // if (mIndexBuffer) mIndexBuffer->Release();
+    // if (mInputLayout) mInputLayout->Release();
+    // if (mVertexShader) mVertexShader->Release();
+    // if (mPixelShaderSolid) mPixelShaderSolid->Release();
+    // if (mPixelShader) mPixelShader->Release();
     if (mDepthStencil) mDepthStencil->Release();
     if (mDepthStencilView) mDepthStencilView->Release();
     if (mRenderTargetView) mRenderTargetView->Release();
@@ -442,30 +287,7 @@ void App::Render()
     //
     // Render the cube
     //
-    mContext->VSSetShader(mVertexShader, NULL, 0);
-    mContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
-    mContext->PSSetShader(mPixelShader, NULL, 0);
-    mContext->PSSetConstantBuffers(0, 1, &mConstantBuffer);
-    mContext->DrawIndexed(36, 0, 0);
-
-    //
-    // Render each light
-    //
-    for (int m = 0; m < 2; m++)
-    {
-        using namespace DirectX;
-        XMMATRIX mLight = XMMatrixTranslationFromVector(5.0f * XMLoadFloat4(&vLightDirs[m]));
-        XMMATRIX mLightScale = XMMatrixScaling(0.2f, 0.2f, 0.2f);
-        mLight = mLightScale * mLight;
-
-        // Update the world variable to reflect the current light
-        cb1.mWorld = XMMatrixTranspose(mLight);
-        cb1.vOutputColor = vLightColors[m];
-        mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
-
-        mContext->PSSetShader(mPixelShaderSolid, NULL, 0);
-        mContext->DrawIndexed(36, 0, 0);
-    }
+    cubeBox.Render(mContext, mConstantBuffer);
 
     //
     // Present our back buffer to our front buffer

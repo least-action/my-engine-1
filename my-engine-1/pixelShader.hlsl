@@ -27,8 +27,3 @@ float4 main(PS_INPUT input) : SV_TARGET
     finalColor.a = 1;
     return finalColor;
 }
-
-float4 PSSolid(PS_INPUT input) : SV_Target
-{
-    return vOutputColor;
-}
