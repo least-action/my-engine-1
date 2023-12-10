@@ -1,9 +1,10 @@
-#include "MainWindow.h"
+#include "App.h"
 
 
 int main() {
-    MainWindow main_window;
-    main_window.WinMain();
+    App app;
+    app.Initialize();
+    app.Run();
 
     return 0;
 }
