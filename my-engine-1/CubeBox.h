@@ -1,4 +1,6 @@
 #pragma once
+#include "D3DUtils.h"
+
 #include <d3d11.h>
 #include <directxmath.h>
 #include <D3DCompiler.h>
@@ -22,48 +24,6 @@ class CubeBox {
     ID3D11PixelShader* mPixelShader = nullptr;
     ID3D11InputLayout* mInputLayout = nullptr;
 
-    HRESULT CompileShader(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob)
-    {
-        if (!srcFile || !entryPoint || !profile || !blob)
-            return E_INVALIDARG;
-
-        *blob = nullptr;
-
-        UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-        flags |= D3DCOMPILE_DEBUG;
-#endif
-
-        const D3D_SHADER_MACRO defines[] =
-        {
-            "EXAMPLE_DEFINE", "1",
-            NULL, NULL
-        };
-
-        ID3DBlob* shaderBlob = nullptr;
-        ID3DBlob* errorBlob = nullptr;
-        HRESULT hr = D3DCompileFromFile(srcFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-            entryPoint, profile,
-            flags, 0, &shaderBlob, &errorBlob);
-        if (FAILED(hr))
-        {
-            if (errorBlob)
-            {
-                OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-                errorBlob->Release();
-            }
-
-            if (shaderBlob)
-                shaderBlob->Release();
-
-            return hr;
-        }
-
-        *blob = shaderBlob;
-
-        return hr;
-    }
-
 public:
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
@@ -72,7 +32,7 @@ public:
         ID3DBlob* pVSBlob = nullptr;
         {
             // Compile the vertex shader
-            hr = CompileShader(L"vertexShader.hlsl", "main", "vs_4_0", &pVSBlob);
+            hr = D3DUtils::CompileShader(L"vertexShader.hlsl", "main", "vs_4_0", &pVSBlob);
             if (FAILED(hr)) {
                 printf("CompileShader error : %08X\n", hr);
                 throw std::runtime_error("");
@@ -111,7 +71,7 @@ public:
         {
             // Compile the pixel shader
             ID3DBlob* pPSBlob = nullptr;
-            hr = CompileShader(L"pixelShader.hlsl", "main", "ps_4_0", &pPSBlob);
+            hr = D3DUtils::CompileShader(L"pixelShader.hlsl", "main", "ps_4_0", &pPSBlob);
             if (FAILED(hr)) {
                 printf("CompileShader error : %08X\n", hr);
                 throw std::runtime_error("");

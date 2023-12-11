@@ -130,12 +130,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="CubeBox.h" />
+    <ClInclude Include="D3DUtils.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="App.h" />
   </ItemGroup>
