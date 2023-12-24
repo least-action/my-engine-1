@@ -25,6 +25,8 @@ class CubeBox {
     ID3D11InputLayout* mInputLayout = nullptr;
 
 public:
+    // todo: separate structure and d3d logic
+
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
         LRESULT hr;
