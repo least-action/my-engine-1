@@ -135,7 +135,7 @@ HRESULT App::InitD3D()
     vp.TopLeftY = 0;
     mContext->RSSetViewports(1, &vp);
 
-
+    surface.Initialize(mDevice, mContext);
     cubeBox.Initialize(mDevice, mContext);
     
     // Create the constant buffer
@@ -254,6 +254,11 @@ void App::Render()
     cb1.vLightColor[1] = vLightColors[1];
     cb1.vOutputColor = DirectX::XMFLOAT4(0, 0, 0, 0);
     mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
+
+    //
+    // Render the ground surface
+    //
+    surface.Render(mContext, mConstantBuffer);
 
     //
     // Render the cube

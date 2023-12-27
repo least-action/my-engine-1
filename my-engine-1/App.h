@@ -1,6 +1,7 @@
 #pragma once
 #include "MainWindow.h"
 #include "CubeBox.h"
+#include "GroundSurface.h"
 #include <windows.h>
 #include <d3d11.h>
 #include <directxmath.h>
@@ -38,6 +39,7 @@ class App {
 	DirectX::XMMATRIX mProjection;
 
 	CubeBox cubeBox;
+	GroundSurface surface;
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

@@ -138,6 +138,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="CubeBox.h" />
     <ClInclude Include="D3DUtils.h" />
+    <ClInclude Include="GroundSurface.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="App.h" />
   </ItemGroup>

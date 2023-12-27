@@ -44,6 +44,9 @@
     <ClInclude Include="D3DUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GroundSurface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vertexShader.hlsl">
