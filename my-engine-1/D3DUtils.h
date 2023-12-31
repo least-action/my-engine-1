@@ -20,4 +20,14 @@ namespace D3DUtils {
         LPCWSTR fileName,
         ID3D11PixelShader** pixelShader
     );
+
+    void CreateVertexBufferWithIndexBuffer(
+        ID3D11Device* device,
+        ID3D11Buffer** vertexBuffer,
+        UINT vertexBufferByteWidth,
+        const void* vertexDataMem,
+        ID3D11Buffer** indexBuffer,
+        UINT indexBufferByteWidth,
+        const void* indexDataMem
+    );
 }

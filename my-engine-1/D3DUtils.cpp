@@ -108,4 +108,50 @@ namespace D3DUtils {
             throw std::runtime_error("");
         }
     }
+
+    void CreateVertexBufferWithIndexBuffer(
+        ID3D11Device* device,
+        ID3D11Buffer** vertexBuffer,
+        UINT vertexBufferByteWidth,
+        const void* vertexDataMem,
+        ID3D11Buffer** indexBuffer,
+        UINT indexBufferByteWidth,
+        const void* indexDataMem
+    )
+    {
+        LRESULT hr;
+        
+        // create vertex buffer
+        D3D11_BUFFER_DESC bd;
+        ZeroMemory(&bd, sizeof(bd));
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = vertexBufferByteWidth;
+        bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        bd.CPUAccessFlags = 0;
+        D3D11_SUBRESOURCE_DATA InitData;
+        ZeroMemory(&InitData, sizeof(InitData));
+        InitData.pSysMem = vertexDataMem;
+        hr = device->CreateBuffer(&bd, &InitData, vertexBuffer);
+        if (FAILED(hr)) {
+            printf("CreateBuffer(vertex buffer) error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+
+        // Set vertex buffer
+        /*UINT stride = sizeof(SimpleVertex);
+        UINT offset = 0;
+        context->IASetVertexBuffers(0, 1, vertexBuffer, &stride, &offset);
+        */
+        // Create index buffer
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
+        bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        bd.CPUAccessFlags = 0;
+        InitData.pSysMem = indexDataMem;
+        hr = device->CreateBuffer(&bd, &InitData, indexBuffer);
+        if (FAILED(hr)) {
+            printf("CreateBuffer(index buffer) error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+    }
 }

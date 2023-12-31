@@ -44,38 +44,11 @@ public:
         D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
         D3DUtils::CreatePixelShader(device, L"pixelShader.hlsl", &mPixelShader);
 
-        // Create vertex buffer
-        D3D11_BUFFER_DESC bd;
-        ZeroMemory(&bd, sizeof(bd));
-        bd.Usage = D3D11_USAGE_DEFAULT;
-        bd.ByteWidth = sizeof(SimpleVertex) * 4;
-        bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        bd.CPUAccessFlags = 0;
-        D3D11_SUBRESOURCE_DATA InitData;
-        ZeroMemory(&InitData, sizeof(InitData));
-        InitData.pSysMem = vertices;
-        hr = device->CreateBuffer(&bd, &InitData, &mVertexBuffer);
-        if (FAILED(hr)) {
-            printf("CreateBuffer(vertex buffer) error : %08X\n", hr);
-            throw std::runtime_error("");
-        }
-
-        // Set vertex buffer
-        UINT stride = sizeof(SimpleVertex);
-        UINT offset = 0;
-        context->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-
-        // Create index buffer
-        bd.Usage = D3D11_USAGE_DEFAULT;
-        bd.ByteWidth = sizeof(WORD) * 6;        // 36 vertices needed for 12 triangles in a triangle list
-        bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        bd.CPUAccessFlags = 0;
-        InitData.pSysMem = indices;
-        hr = device->CreateBuffer(&bd, &InitData, &mIndexBuffer);
-        if (FAILED(hr)) {
-            printf("CreateBuffer(index buffer) error : %08X\n", hr);
-            throw std::runtime_error("");
-        }
+        D3DUtils::CreateVertexBufferWithIndexBuffer(
+            device,
+            &mVertexBuffer, sizeof(SimpleVertex) * 4, vertices,
+            &mIndexBuffer, sizeof(WORD) * 6, indices
+        );
 
         return;
     }
