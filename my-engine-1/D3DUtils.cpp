@@ -61,30 +61,51 @@ namespace D3DUtils {
         LRESULT hr;
 
         ID3DBlob* pVSBlob = nullptr;
-        {
-            // Compile the vertex shader
-            hr = CompileShader(fileName, "main", "vs_4_0", &pVSBlob);
-            if (FAILED(hr)) {
-                printf("CompileShader error : %08X\n", hr);
-                throw std::runtime_error("");
-            }
-
-            // Create the vertex shader
-            hr = device->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, vertexShader);
-            if (FAILED(hr)) {
-                pVSBlob->Release();
-                printf("CreateVertexShader error : %08X\n", hr);
-                throw std::runtime_error("");
-            }
+        // Compile the vertex shader
+        hr = CompileShader(fileName, "main", "vs_4_0", &pVSBlob);
+        if (FAILED(hr)) {
+            printf("CompileShader error : %08X\n", hr);
+            throw std::runtime_error("");
         }
 
-        {
-            // Create the input layout
-            hr = device->CreateInputLayout(layout.data(), UINT(layout.size()), pVSBlob->GetBufferPointer(),
-                pVSBlob->GetBufferSize(), inputLayout);
+        // Create the vertex shader
+        hr = device->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, vertexShader);
+        if (FAILED(hr)) {
             pVSBlob->Release();
-            if (FAILED(hr))
-                throw std::runtime_error("");
+            printf("CreateVertexShader error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+
+        // Create the input layout
+        hr = device->CreateInputLayout(layout.data(), UINT(layout.size()), pVSBlob->GetBufferPointer(),
+            pVSBlob->GetBufferSize(), inputLayout);
+        pVSBlob->Release();
+        if (FAILED(hr))
+            throw std::runtime_error("");
+    }
+
+    void CreatePixelShader(
+        ID3D11Device* device,
+        LPCWSTR fileName,
+        ID3D11PixelShader** pixelShader
+    )
+    {
+        LRESULT hr;
+
+        // Compile the pixel shader
+        ID3DBlob* pPSBlob = nullptr;
+        hr = D3DUtils::CompileShader(fileName, "main", "ps_4_0", &pPSBlob);
+        if (FAILED(hr)) {
+            printf("CompileShader error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+
+        // Create the pixel shader
+        hr = device->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, pixelShader);
+        pPSBlob->Release();
+        if (FAILED(hr)) {
+            printf("CreatePixelShader error : %08X\n", hr);
+            throw std::runtime_error("");
         }
     }
 }

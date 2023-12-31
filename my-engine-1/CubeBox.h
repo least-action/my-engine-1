@@ -92,25 +92,7 @@ public:
             { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
         D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
-        
-
-        {
-            // Compile the pixel shader
-            ID3DBlob* pPSBlob = nullptr;
-            hr = D3DUtils::CompileShader(L"pixelShader.hlsl", "main", "ps_4_0", &pPSBlob);
-            if (FAILED(hr)) {
-                printf("CompileShader error : %08X\n", hr);
-                throw std::runtime_error("");
-            }
-
-            // Create the pixel shader
-            hr = device->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &mPixelShader);
-            pPSBlob->Release();
-            if (FAILED(hr)) {
-                printf("CreatePixelShader error : %08X\n", hr);
-                throw std::runtime_error("");
-            }
-        }
+        D3DUtils::CreatePixelShader(device, L"pixelShader.hlsl", &mPixelShader);
 
         // Create vertex buffer
         D3D11_BUFFER_DESC bd;

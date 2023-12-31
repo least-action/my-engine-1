@@ -14,4 +14,10 @@ namespace D3DUtils {
         const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout,
         ID3D11InputLayout** inputLayout
     );
+
+    void CreatePixelShader(
+        ID3D11Device* device,
+        LPCWSTR fileName,
+        ID3D11PixelShader** pixelShader
+    );
 }
