@@ -85,44 +85,14 @@ public:
     {
         LRESULT hr;
 
-        ID3DBlob* pVSBlob = nullptr;
+        // Define the input layout
+        std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
-            // Compile the vertex shader
-            hr = D3DUtils::CompileShader(L"vertexShader.hlsl", "main", "vs_4_0", &pVSBlob);
-            if (FAILED(hr)) {
-                printf("CompileShader error : %08X\n", hr);
-                throw std::runtime_error("");
-            }
-
-            // Create the vertex shader
-            hr = device->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &mVertexShader);
-            if (FAILED(hr))
-            {
-                pVSBlob->Release();
-                printf("CreateVertexShader error : %08X\n", hr);
-                throw std::runtime_error("");
-            }
-        }
-
-        {
-            // Define the input layout
-            D3D11_INPUT_ELEMENT_DESC layout[] =
-            {
-                { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-                { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            };
-            UINT numElements = ARRAYSIZE(layout);
-
-            // Create the input layout
-            hr = device->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
-                pVSBlob->GetBufferSize(), &mInputLayout);
-            pVSBlob->Release();
-            if (FAILED(hr))
-                throw std::runtime_error("");
-
-            // Set the input layout
-            context->IASetInputLayout(mInputLayout);
-        }
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+        D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
+        
 
         {
             // Compile the pixel shader

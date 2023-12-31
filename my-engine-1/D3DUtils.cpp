@@ -1,5 +1,12 @@
 #include <D3DCompiler.h>
 
+#include <vector>
+#include <stdexcept>
+#include <stdio.h>
+#include <d3d11.h>
+#include <D3DCompiler.h>
+
+
 namespace D3DUtils {
     HRESULT CompileShader(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob)
     {
@@ -41,5 +48,43 @@ namespace D3DUtils {
         *blob = shaderBlob;
 
         return hr;
+    }
+
+    void CreateVertexShaderWithInputLayout(
+        ID3D11Device* device,
+        LPCWSTR fileName,
+        ID3D11VertexShader** vertexShader,
+        const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout,
+        ID3D11InputLayout** inputLayout
+    )
+    {
+        LRESULT hr;
+
+        ID3DBlob* pVSBlob = nullptr;
+        {
+            // Compile the vertex shader
+            hr = CompileShader(fileName, "main", "vs_4_0", &pVSBlob);
+            if (FAILED(hr)) {
+                printf("CompileShader error : %08X\n", hr);
+                throw std::runtime_error("");
+            }
+
+            // Create the vertex shader
+            hr = device->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, vertexShader);
+            if (FAILED(hr)) {
+                pVSBlob->Release();
+                printf("CreateVertexShader error : %08X\n", hr);
+                throw std::runtime_error("");
+            }
+        }
+
+        {
+            // Create the input layout
+            hr = device->CreateInputLayout(layout.data(), UINT(layout.size()), pVSBlob->GetBufferPointer(),
+                pVSBlob->GetBufferSize(), inputLayout);
+            pVSBlob->Release();
+            if (FAILED(hr))
+                throw std::runtime_error("");
+        }
     }
 }
