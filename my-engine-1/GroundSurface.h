@@ -33,8 +33,6 @@ class GroundSurface
 public:
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
-        LRESULT hr;
-
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {

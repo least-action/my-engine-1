@@ -137,14 +137,9 @@ namespace D3DUtils {
             throw std::runtime_error("");
         }
 
-        // Set vertex buffer
-        /*UINT stride = sizeof(SimpleVertex);
-        UINT offset = 0;
-        context->IASetVertexBuffers(0, 1, vertexBuffer, &stride, &offset);
-        */
         // Create index buffer
         bd.Usage = D3D11_USAGE_DEFAULT;
-        bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
+        bd.ByteWidth = indexBufferByteWidth;
         bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
         bd.CPUAccessFlags = 0;
         InitData.pSysMem = indexDataMem;

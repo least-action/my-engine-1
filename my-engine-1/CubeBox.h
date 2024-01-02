@@ -79,12 +79,8 @@ class CubeBox {
     };
 
 public:
-    // todo: separate structure and d3d logic
-
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
-        LRESULT hr;
-
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
@@ -105,7 +101,6 @@ public:
 
     void Render(ID3D11DeviceContext* context, ID3D11Buffer* constantBuffer)
     {
-        
         context->IASetInputLayout(mInputLayout);
         
         UINT stride = sizeof(SimpleVertex);

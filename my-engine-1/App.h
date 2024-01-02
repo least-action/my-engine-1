@@ -20,11 +20,20 @@ class App {
 		DirectX::XMFLOAT4 vOutputColor;
 	};
 
+	struct Eye
+	{
+		DirectX::XMFLOAT4 Pos;
+		DirectX::XMFLOAT4 At;
+		DirectX::XMFLOAT4 Up;
+	};
+
 	HRESULT InitWindow();
 	HRESULT InitD3D();
 	void CleanupDevice();
 	void Render();
-    
+
+	void UpdateModels();
+
 	std::unique_ptr<MainWindow> mMainWindow;
 
 	IDXGISwapChain* mSwapChain = nullptr;
@@ -34,9 +43,16 @@ class App {
 	ID3D11Texture2D* mDepthStencil = nullptr;
 	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 	ID3D11Buffer* mConstantBuffer = nullptr;
+
+	Eye mEye = {
+		{0.0f, 4.0f, -10.0f, 0.0f},
+		{0.0f, 1.0f, 0.0f, 0.0f},
+		{0.0f, 1.0f, 0.0f, 0.0f}
+	};
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX mView;
 	DirectX::XMMATRIX mProjection;
+	
 
 	CubeBox cubeBox;
 	GroundSurface surface;

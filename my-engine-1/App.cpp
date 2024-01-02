@@ -1,6 +1,7 @@
 #include "App.h"
 #include "MainWindow.h"
 #include "CubeBox.h"
+#include "MathUtils.h"
 
 #include <D3DCompiler.h>
 #include <directxmath.h>
@@ -155,10 +156,8 @@ HRESULT App::InitD3D()
     mWorld = DirectX::XMMatrixIdentity();
 
     // Initialize the view matrix
-    DirectX::XMVECTOR Eye = DirectX::XMVectorSet(0.0f, 4.0f, -10.0f, 0.0f);
-    DirectX::XMVECTOR At = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    DirectX::XMVECTOR Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    mView = DirectX::XMMatrixLookAtLH(Eye, At, Up);
+    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.At, mEye.Up);
+    
 
     // Initialize the projection matrix
     mProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
@@ -199,18 +198,22 @@ int App::Initialize()
     return 0;
 }
 
-void App::Render()
+void App::UpdateModels()
 {
     // Update our time
     static float t = 0.0f;
-    static DWORD dwTimeStart = 0;
+    static DWORD dwTimeStart = GetTickCount64();
     DWORD dwTimeCur = GetTickCount64();
-    if (dwTimeStart == 0)
-        dwTimeStart = dwTimeCur;
     t = (dwTimeCur - dwTimeStart) / 1000.0f;
+}
+
+void App::Render()
+{
+    UpdateModels();
+    
 
     // Rotate cube around the origin
-    mWorld = DirectX::XMMatrixRotationY(t);
+    mWorld = DirectX::XMMatrixRotationY(10);
 
     // Setup our lighting parameters
     DirectX::XMFLOAT4 vLightDirs[2] =
@@ -225,7 +228,7 @@ void App::Render()
     };
 
     // Rotate the second light around the origin
-    DirectX::XMMATRIX mRotate = DirectX::XMMatrixRotationY(-2.0f * t);
+    DirectX::XMMATRIX mRotate = DirectX::XMMatrixRotationY(-2.0f * 10);
     DirectX::XMVECTOR vLightDir = DirectX::XMLoadFloat4(&vLightDirs[1]);
     vLightDir = DirectX::XMVector3Transform(vLightDir, mRotate);
     DirectX::XMStoreFloat4(&vLightDirs[1], vLightDir);

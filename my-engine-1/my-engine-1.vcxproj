@@ -133,6 +133,7 @@
     <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MathUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="GroundSurface.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="MathUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pixelShader.hlsl">
