@@ -11,6 +11,14 @@
 #include "MainWindow.h"
 
 
+bool MainWindow::IsLeftDown() { return keyDowns[65]; }
+
+bool MainWindow::IsRightDown() { return keyDowns[68]; }
+
+bool MainWindow::IsUpDown() { return keyDowns[87]; }
+
+bool MainWindow::IsDownDown() { return keyDowns[83]; }
+
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -30,6 +38,21 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         EndPaint(mHwnd, &ps);
     }
+    case WM_KEYDOWN:
+        switch (wParam) {
+        case 27:
+            PostQuitMessage(0);
+            break;
+        default:
+            keyDowns[wParam] = true;
+            break;
+        }
+        break;
+
+    case WM_KEYUP:
+        keyDowns[wParam] = false;
+        break;
+        
     return 0;
 
     }

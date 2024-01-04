@@ -25,6 +25,7 @@ class App {
 		DirectX::XMFLOAT3 Pos;
 		DirectX::XMFLOAT3 Look;
 		DirectX::XMFLOAT3 Up;
+		DirectX::XMFLOAT3 Right;
 	};
 
 	HRESULT InitWindow();
@@ -45,14 +46,16 @@ class App {
 	ID3D11Buffer* mConstantBuffer = nullptr;
 
 	Eye mEye = {
-		{0.0f, 0.0f, -10.0f},
+		{0.0f, 1.6f, -10.0f},
 		{0.0f, 0.0f, 1.0f},
-		{0.0f, 1.0f, 0.0f}
+		{0.0f, 1.0f, 0.0f},
+		{1.0f, 0.0f, 0.0f}
 	};
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX mView;
 	DirectX::XMMATRIX mProjection;
-	
+
+	float mSpeed = 5.0f;
 
 	CubeBox cubeBox;
 	GroundSurface surface;

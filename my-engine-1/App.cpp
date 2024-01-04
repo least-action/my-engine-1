@@ -156,7 +156,7 @@ HRESULT App::InitD3D()
     mWorld = DirectX::XMMatrixIdentity();
 
     // Initialize the view matrix
-    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up);
+    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up, mEye.Right);
     
 
     // Initialize the projection matrix
@@ -202,9 +202,30 @@ void App::UpdateModels()
 {
     // Update our time
     static float t = 0.0f;
+    static float dt = 0.0f;
     static DWORD dwTimeStart = GetTickCount64();
+    static DWORD prevTime = GetTickCount64();
     DWORD dwTimeCur = GetTickCount64();
+    
     t = (dwTimeCur - dwTimeStart) / 1000.0f;
+    dt = (dwTimeCur - prevTime) / 1000.0f;
+    prevTime = dwTimeCur;
+    
+    DirectX::XMVECTOR movingDir = {
+        (mMainWindow->IsRightDown() ? 1.0f : 0.0f) + (mMainWindow->IsLeftDown() ? -1.0f : 0.0f),
+        0.0f,
+        (mMainWindow->IsUpDown() ? 1.0f : 0.0f) + (mMainWindow->IsDownDown() ? -1.0f : 0.0f),
+        0.0f
+    };
+    DirectX::XMVECTOR movingDist = DirectX::XMVectorScale(DirectX::XMVector4Normalize(movingDir), dt * mSpeed);
+    DirectX::XMFLOAT3 movingVec;
+    DirectX::XMStoreFloat3(&movingVec, movingDist);
+    
+    mEye.Pos.x = mEye.Pos.x + movingVec.x;
+    mEye.Pos.y = mEye.Pos.y + movingVec.y;
+    mEye.Pos.z = mEye.Pos.z + movingVec.z;
+    
+    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up, mEye.Right);
 }
 
 void App::Render()
