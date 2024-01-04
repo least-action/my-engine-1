@@ -22,9 +22,9 @@ class App {
 
 	struct Eye
 	{
-		DirectX::XMFLOAT4 Pos;
-		DirectX::XMFLOAT4 At;
-		DirectX::XMFLOAT4 Up;
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT3 Look;
+		DirectX::XMFLOAT3 Up;
 	};
 
 	HRESULT InitWindow();
@@ -45,9 +45,9 @@ class App {
 	ID3D11Buffer* mConstantBuffer = nullptr;
 
 	Eye mEye = {
-		{0.0f, 4.0f, -10.0f, 0.0f},
-		{0.0f, 1.0f, 0.0f, 0.0f},
-		{0.0f, 1.0f, 0.0f, 0.0f}
+		{0.0f, 0.0f, -10.0f},
+		{0.0f, 0.0f, 1.0f},
+		{0.0f, 1.0f, 0.0f}
 	};
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX mView;

@@ -156,7 +156,7 @@ HRESULT App::InitD3D()
     mWorld = DirectX::XMMatrixIdentity();
 
     // Initialize the view matrix
-    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.At, mEye.Up);
+    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up);
     
 
     // Initialize the projection matrix
@@ -210,10 +210,9 @@ void App::UpdateModels()
 void App::Render()
 {
     UpdateModels();
-    
 
     // Rotate cube around the origin
-    mWorld = DirectX::XMMatrixRotationY(10);
+    mWorld = DirectX::XMMatrixRotationY(0);
 
     // Setup our lighting parameters
     DirectX::XMFLOAT4 vLightDirs[2] =
