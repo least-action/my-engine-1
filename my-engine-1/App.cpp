@@ -230,7 +230,9 @@ void App::UpdateModels()
     static POINT startPoint;
     static POINT currentPoint;
     static DirectX::XMFLOAT3 changedLook = mEye.Look;
+    static DirectX::XMFLOAT3 changedUp = mEye.Up;
     static DirectX::XMFLOAT3 changedRight = mEye.Right;
+    
     if (mMainWindow->IsRightClickDown()) {
         GetCursorPos(&currentPoint);
         if (isRightClickJustClick) {
@@ -238,37 +240,74 @@ void App::UpdateModels()
             isRightClickJustClick = false;
         }
         
-        float deltaRadian = (currentPoint.x - startPoint.x) / 360.0f;
+        float deltaYaw = (currentPoint.x - startPoint.x) / 360.0f;
+        float deltaPitch = -(currentPoint.y - startPoint.y) / 360.0f;
 
-        changedLook.x = mEye.Look.x * cos(deltaRadian) + mEye.Look.z * -sin(deltaRadian);
-        changedLook.y = mEye.Look.y;
-        changedLook.z = mEye.Look.x * sin(deltaRadian) + mEye.Look.z * cos(deltaRadian);
+        changedLook.x = 
+            mEye.Look.x * cos(deltaYaw) +
+            mEye.Look.y * (-sin(deltaPitch) * sin(deltaYaw)) +
+            mEye.Look.z * (cos(deltaPitch) * -sin(deltaYaw));
+        changedLook.y = 
+            mEye.Look.y * cos(deltaPitch) +
+            mEye.Look.z * -sin(deltaPitch);
+        changedLook.z = 
+            mEye.Look.x * sin(deltaYaw) +
+            mEye.Look.y * (sin(deltaPitch) * cos(deltaYaw)) +
+            mEye.Look.z * (cos(deltaPitch) * cos(deltaYaw));
 
-        changedRight.x = mEye.Right.x * cos(deltaRadian) + mEye.Right.z * -sin(deltaRadian);
-        changedRight.y = mEye.Right.y;
-        changedRight.z = mEye.Right.x * sin(deltaRadian) + mEye.Right.z * cos(deltaRadian);
+        changedUp.x =
+            mEye.Up.x * cos(deltaYaw) +
+            mEye.Up.y * (-sin(deltaPitch) * sin(deltaYaw)) +
+            mEye.Up.z * (cos(deltaPitch) * sin(deltaYaw));
+        changedUp.y =
+            mEye.Up.y * cos(deltaPitch) +
+            mEye.Up.z * -sin(deltaPitch);
+        changedUp.z =
+            mEye.Up.x * sin(deltaYaw) +
+            mEye.Up.y * (sin(deltaPitch) * cos(deltaYaw)) +
+            mEye.Up.z * (cos(deltaPitch) * cos(deltaYaw));
+
+        changedRight.x =
+            mEye.Right.x * cos(deltaYaw) +
+            mEye.Right.y * (-sin(deltaPitch) * sin(deltaYaw)) +
+            mEye.Right.z * (cos(deltaPitch) * sin(deltaYaw));
+        changedRight.y =
+            mEye.Right.y * cos(deltaPitch) +
+            mEye.Right.z * -sin(deltaPitch);
+        changedRight.z =
+            mEye.Right.x * sin(deltaYaw) +
+            mEye.Right.y * (sin(deltaPitch) * cos(deltaYaw)) +
+            mEye.Right.z * (cos(deltaPitch) * cos(deltaYaw));
     }
     else {
         if (!isRightClickJustClick) {
             isRightClickJustClick = true;
 
             mEye.Look = changedLook;
+            mEye.Up = changedUp;
             mEye.Right = changedRight;
-            float ll = sqrt(mEye.Look.x * mEye.Look.x + mEye.Look.z * mEye.Look.z);
+            float ll = sqrt(mEye.Look.x * mEye.Look.x + mEye.Look.y * mEye.Look.y + mEye.Look.z * mEye.Look.z);
             mEye.Look.x = mEye.Look.x / ll;
+            mEye.Look.y = mEye.Look.y / ll;
             mEye.Look.z = mEye.Look.z / ll;
-            float dd = mEye.Look.x * mEye.Right.x + mEye.Look.z * mEye.Right.z;
+            float dd = mEye.Look.x * mEye.Right.x + mEye.Look.y * mEye.Right.y + mEye.Look.z * mEye.Right.z;
             mEye.Right.x = mEye.Right.x - dd * mEye.Look.x;
+            mEye.Right.y = mEye.Right.y - dd * mEye.Look.y;
             mEye.Right.z = mEye.Right.z - dd * mEye.Look.z;
-            float lr = sqrt(mEye.Right.x * mEye.Right.x + mEye.Right.z * mEye.Right.z);
+            float lr = sqrt(mEye.Right.x * mEye.Right.x + mEye.Right.y * mEye.Right.y + mEye.Right.z * mEye.Right.z);
             mEye.Right.x = mEye.Right.x / lr;
+            mEye.Right.y = mEye.Right.y / lr;
             mEye.Right.z = mEye.Right.z / lr;
+            mEye.Up.x = mEye.Look.y * mEye.Right.z - mEye.Look.z * mEye.Right.y;
+            mEye.Up.y = mEye.Look.z * mEye.Right.x - mEye.Look.x * mEye.Right.z;
+            mEye.Up.z = mEye.Look.x * mEye.Right.y - mEye.Look.y * mEye.Right.x;
         }
         changedLook = mEye.Look;
+        changedUp = mEye.Up;
         changedRight = mEye.Right;
     }
 
-    mView = MathUtils::MatrixLookAtLH(mEye.Pos, changedLook, mEye.Up, changedRight);
+    mView = MathUtils::MatrixLookAtLH(mEye.Pos, changedLook, changedUp, changedRight);
 }
 
 void App::Render()
