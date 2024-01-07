@@ -6,6 +6,7 @@
 #include <D3DCompiler.h>
 #include <directxmath.h>
 
+#include <iostream>
 #include <stdio.h>
 
 HRESULT App::InitWindow()
@@ -224,7 +225,38 @@ void App::UpdateModels()
     mEye.Pos.x = mEye.Pos.x + movingVec.x;
     mEye.Pos.y = mEye.Pos.y + movingVec.y;
     mEye.Pos.z = mEye.Pos.z + movingVec.z;
-    
+
+    static bool isRightClickJustClick = true;
+    static POINT prevPoint;
+    static POINT currentPoint;
+    if (mMainWindow->IsRightClickDown()) {
+        GetCursorPos(&currentPoint);
+        if (isRightClickJustClick)
+            prevPoint = currentPoint;
+
+        
+        float deltaRadian = (currentPoint.x - prevPoint.x) / 360.0f;
+
+        mEye.Look.x = mEye.Look.x * cos(deltaRadian) + mEye.Look.z * sin(deltaRadian);
+        mEye.Look.z = mEye.Look.x * (-sin(deltaRadian)) + mEye.Look.z * cos(deltaRadian);
+        float ll = sqrt(mEye.Look.x * mEye.Look.x + mEye.Look.z * mEye.Look.z);
+        mEye.Look.x = mEye.Look.x / ll;
+        mEye.Look.z = mEye.Look.z / ll;
+        mEye.Right.x = mEye.Right.x * cos(deltaRadian) + mEye.Right.z * sin(deltaRadian);
+        mEye.Right.z = mEye.Right.x * (-sin(deltaRadian)) + mEye.Right.z * cos(deltaRadian);
+        float dd = mEye.Look.x * mEye.Right.x + mEye.Look.z * mEye.Right.z;
+        mEye.Right.x = mEye.Right.x - dd * mEye.Look.x;
+        mEye.Right.z = mEye.Right.z - dd * mEye.Look.z;
+        float lr = sqrt(mEye.Right.x * mEye.Right.x + mEye.Right.z * mEye.Right.z);
+        mEye.Right.x = mEye.Right.x / lr;
+        mEye.Right.z = mEye.Right.z / lr;
+        prevPoint = currentPoint;
+        isRightClickJustClick = false;
+    }
+    else {
+        isRightClickJustClick = true;
+    }
+
     mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up, mEye.Right);
 }
 

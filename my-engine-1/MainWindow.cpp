@@ -19,6 +19,8 @@ bool MainWindow::IsUpDown() { return keyDowns[87]; }
 
 bool MainWindow::IsDownDown() { return keyDowns[83]; }
 
+bool MainWindow::IsRightClickDown() { return mouseDowns[1]; }
+
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -51,6 +53,14 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_KEYUP:
         keyDowns[wParam] = false;
+        break;
+
+    case WM_RBUTTONDOWN:
+        mouseDowns[1] = true;
+        break;
+
+    case WM_RBUTTONUP:
+        mouseDowns[1] = false;
         break;
         
     return 0;
