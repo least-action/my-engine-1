@@ -243,41 +243,14 @@ void App::UpdateModels()
         float deltaYaw = (currentPoint.x - startPoint.x) / 360.0f;
         float deltaPitch = -(currentPoint.y - startPoint.y) / 360.0f;
 
-        changedLook.x = 
-            mEye.Look.x * cos(deltaYaw) +
-            mEye.Look.y * (-sin(deltaPitch) * sin(deltaYaw)) +
-            mEye.Look.z * (cos(deltaPitch) * -sin(deltaYaw));
-        changedLook.y = 
-            mEye.Look.y * cos(deltaPitch) +
-            mEye.Look.z * -sin(deltaPitch);
-        changedLook.z = 
-            mEye.Look.x * sin(deltaYaw) +
-            mEye.Look.y * (sin(deltaPitch) * cos(deltaYaw)) +
-            mEye.Look.z * (cos(deltaPitch) * cos(deltaYaw));
+        DirectX::XMMATRIX rotationYaw = MathUtils::rotation(mEye.Up, -deltaYaw);
+        DirectX::XMStoreFloat3(&changedRight, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Right), rotationYaw));
+        DirectX::XMMATRIX rotationPitch = MathUtils::rotation(changedRight, deltaPitch);
+        DirectX::XMMATRIX rotationMatrix = rotationYaw * rotationPitch;
 
-        changedUp.x =
-            mEye.Up.x * cos(deltaYaw) +
-            mEye.Up.y * (-sin(deltaPitch) * sin(deltaYaw)) +
-            mEye.Up.z * (cos(deltaPitch) * sin(deltaYaw));
-        changedUp.y =
-            mEye.Up.y * cos(deltaPitch) +
-            mEye.Up.z * -sin(deltaPitch);
-        changedUp.z =
-            mEye.Up.x * sin(deltaYaw) +
-            mEye.Up.y * (sin(deltaPitch) * cos(deltaYaw)) +
-            mEye.Up.z * (cos(deltaPitch) * cos(deltaYaw));
-
-        changedRight.x =
-            mEye.Right.x * cos(deltaYaw) +
-            mEye.Right.y * (-sin(deltaPitch) * sin(deltaYaw)) +
-            mEye.Right.z * (cos(deltaPitch) * sin(deltaYaw));
-        changedRight.y =
-            mEye.Right.y * cos(deltaPitch) +
-            mEye.Right.z * -sin(deltaPitch);
-        changedRight.z =
-            mEye.Right.x * sin(deltaYaw) +
-            mEye.Right.y * (sin(deltaPitch) * cos(deltaYaw)) +
-            mEye.Right.z * (cos(deltaPitch) * cos(deltaYaw));
+        DirectX::XMStoreFloat3(&changedLook, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Look), rotationMatrix));
+        DirectX::XMStoreFloat3(&changedUp, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Up), rotationMatrix));
+        DirectX::XMStoreFloat3(&changedRight, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Right), rotationMatrix));
     }
     else {
         if (!isRightClickJustClick) {

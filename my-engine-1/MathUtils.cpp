@@ -21,4 +21,35 @@ namespace MathUtils {
 		
 		return i * translation * rotate;
 	}
+
+	DirectX::XMMATRIX rotation(DirectX::XMFLOAT3 axis, float theta)
+	{
+		float c = cos(theta);
+		float s = sin(theta);
+
+		DirectX::XMFLOAT3 tX = {
+			axis.x* axis.x* (1 - c) + c,
+			axis.x* axis.y* (1 - c) + axis.z * s,
+			axis.x* axis.z* (1 - c) - axis.y * s,
+		};
+
+		DirectX::XMFLOAT3 tY = {
+			axis.y* axis.x* (1 - c) - axis.z * s,
+			axis.y* axis.y* (1 - c) + c,
+			axis.y* axis.z* (1 - c) + axis.x * s,
+		};
+
+		DirectX::XMFLOAT3 tZ = {
+			axis.z* axis.x* (1 - c) + axis.y * s,
+			axis.z* axis.y* (1 - c) - axis.x * s,
+			axis.z* axis.z* (1 - c) + c,
+		};
+
+		return {
+			tX.x, tX.y, tX.z, 0.0f,
+			tY.x, tY.y, tY.z, 0.0f,
+			tZ.x, tZ.y, tZ.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f,
+		};
+	}
 }
