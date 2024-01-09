@@ -22,7 +22,7 @@ namespace MathUtils {
 		return i * translation * rotate;
 	}
 
-	DirectX::XMMATRIX rotation(DirectX::XMFLOAT3 axis, float theta)
+	DirectX::XMMATRIX BuildRotation(DirectX::XMFLOAT3 axis, float theta)
 	{
 		float c = cos(theta);
 		float s = sin(theta);
@@ -51,5 +51,23 @@ namespace MathUtils {
 			tZ.x, tZ.y, tZ.z, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f,
 		};
+	}
+
+	void PrintMatrix(DirectX::XMMATRIX m)
+	{
+		printf(
+			"%f %f %f %f\n"
+			"%f %f %f %f\n"
+			"%f %f %f %f\n"
+			"%f %f %f %f\n",
+			m.r[0].m128_f32[0], m.r[0].m128_f32[1], m.r[0].m128_f32[2], m.r[0].m128_f32[3],
+			m.r[1].m128_f32[0], m.r[1].m128_f32[1], m.r[1].m128_f32[2], m.r[1].m128_f32[3],
+			m.r[2].m128_f32[0], m.r[2].m128_f32[1], m.r[2].m128_f32[2], m.r[2].m128_f32[3],
+			m.r[3].m128_f32[0], m.r[3].m128_f32[1], m.r[3].m128_f32[2], m.r[3].m128_f32[3]
+		);
+	}
+	void PrintFloat3(DirectX::XMFLOAT3 f)
+	{
+		printf("%f %f %f\n", f.x, f.y, f.z);
 	}
 }

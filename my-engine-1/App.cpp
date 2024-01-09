@@ -243,9 +243,10 @@ void App::UpdateModels()
         float deltaYaw = (currentPoint.x - startPoint.x) / 360.0f;
         float deltaPitch = -(currentPoint.y - startPoint.y) / 360.0f;
 
-        DirectX::XMMATRIX rotationYaw = MathUtils::rotation(mEye.Up, -deltaYaw);
+        DirectX::XMMATRIX rotationYaw = MathUtils::BuildRotation({0.0f, 1.0f, 0.0f}, deltaYaw);
         DirectX::XMStoreFloat3(&changedRight, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Right), rotationYaw));
-        DirectX::XMMATRIX rotationPitch = MathUtils::rotation(changedRight, deltaPitch);
+
+        DirectX::XMMATRIX rotationPitch = MathUtils::BuildRotation(changedRight, -deltaPitch);
         DirectX::XMMATRIX rotationMatrix = rotationYaw * rotationPitch;
 
         DirectX::XMStoreFloat3(&changedLook, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Look), rotationMatrix));
