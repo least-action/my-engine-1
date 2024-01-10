@@ -212,12 +212,20 @@ void App::UpdateModels()
     dt = (dwTimeCur - prevTime) / 1000.0f;
     prevTime = dwTimeCur;
     
-    DirectX::XMVECTOR movingDir = {
-        (mMainWindow->IsRightDown() ? 1.0f : 0.0f) + (mMainWindow->IsLeftDown() ? -1.0f : 0.0f),
-        0.0f,
-        (mMainWindow->IsUpDown() ? 1.0f : 0.0f) + (mMainWindow->IsDownDown() ? -1.0f : 0.0f),
-        0.0f
-    };
+    DirectX::XMVECTOR movingDir = { 0.0f, };
+    if (mMainWindow->IsRightDown() && !mMainWindow->IsLeftDown()) {
+        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&mEye.Right));
+    }
+    else if (!mMainWindow->IsRightDown() && mMainWindow->IsLeftDown()) {
+        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&mEye.Right));
+    }
+    if (mMainWindow->IsUpDown() && !mMainWindow->IsDownDown()) {
+        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&mEye.Look));
+    }
+    else if (!mMainWindow->IsUpDown() && mMainWindow->IsDownDown()) {
+        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&mEye.Look));
+    }
+
     DirectX::XMVECTOR movingDist = DirectX::XMVectorScale(DirectX::XMVector4Normalize(movingDir), dt * mSpeed);
     DirectX::XMFLOAT3 movingVec;
     DirectX::XMStoreFloat3(&movingVec, movingDist);
