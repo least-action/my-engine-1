@@ -1,6 +1,5 @@
 cbuffer ConstantBuffer : register(b0)
 {
-    matrix World2;
     matrix View;
     matrix Projection;
     float4 vLightDir[2];

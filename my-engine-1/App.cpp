@@ -360,7 +360,6 @@ void App::Render()
     // Update matrix variables and lighting variables
     //
     ConstantBuffer cb1;
-    cb1.mWorld = DirectX::XMMatrixTranspose(mWorld);
     cb1.mView = DirectX::XMMatrixTranspose(mView);
     cb1.mProjection = DirectX::XMMatrixTranspose(mProjection);
     cb1.vLightDir[0] = vLightDirs[0];
