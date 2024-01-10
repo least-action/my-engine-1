@@ -18,6 +18,7 @@ struct PS_INPUT
 {
     float4 Pos : SV_POSITION;
     float3 Norm : TEXCOORD0;
+    float4 Color : COLOR;
 };
 
 PS_INPUT main(VS_INPUT input)
@@ -27,6 +28,7 @@ PS_INPUT main(VS_INPUT input)
     output.Pos = mul(output.Pos, View);
     output.Pos = mul(output.Pos, Projection);
     output.Norm = mul(input.Norm, World);
+    output.Color = float4(0.3, 0.5, 0.5, 1.0);
     
     return output;
 }

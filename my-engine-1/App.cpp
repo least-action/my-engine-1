@@ -212,28 +212,6 @@ void App::UpdateModels()
     dt = (dwTimeCur - prevTime) / 1000.0f;
     prevTime = dwTimeCur;
     
-    DirectX::XMVECTOR movingDir = { 0.0f, };
-    if (mMainWindow->IsRightDown() && !mMainWindow->IsLeftDown()) {
-        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&mEye.Right));
-    }
-    else if (!mMainWindow->IsRightDown() && mMainWindow->IsLeftDown()) {
-        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&mEye.Right));
-    }
-    if (mMainWindow->IsUpDown() && !mMainWindow->IsDownDown()) {
-        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&mEye.Look));
-    }
-    else if (!mMainWindow->IsUpDown() && mMainWindow->IsDownDown()) {
-        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&mEye.Look));
-    }
-
-    DirectX::XMVECTOR movingDist = DirectX::XMVectorScale(DirectX::XMVector4Normalize(movingDir), dt * mSpeed);
-    DirectX::XMFLOAT3 movingVec;
-    DirectX::XMStoreFloat3(&movingVec, movingDist);
-    
-    mEye.Pos.x = mEye.Pos.x + movingVec.x;
-    mEye.Pos.y = mEye.Pos.y + movingVec.y;
-    mEye.Pos.z = mEye.Pos.z + movingVec.z;
-
     static bool isRightClickJustClick = true;
     static POINT startPoint;
     static POINT currentPoint;
@@ -288,6 +266,28 @@ void App::UpdateModels()
         changedUp = mEye.Up;
         changedRight = mEye.Right;
     }
+
+    DirectX::XMVECTOR movingDir = { 0.0f, };
+    if (mMainWindow->IsRightDown() && !mMainWindow->IsLeftDown()) {
+        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&changedRight));
+    }
+    else if (!mMainWindow->IsRightDown() && mMainWindow->IsLeftDown()) {
+        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&changedRight));
+    }
+    if (mMainWindow->IsUpDown() && !mMainWindow->IsDownDown()) {
+        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&changedLook));
+    }
+    else if (!mMainWindow->IsUpDown() && mMainWindow->IsDownDown()) {
+        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&changedLook));
+    }
+
+    DirectX::XMVECTOR movingDist = DirectX::XMVectorScale(DirectX::XMVector4Normalize(movingDir), dt * mSpeed);
+    DirectX::XMFLOAT3 movingVec;
+    DirectX::XMStoreFloat3(&movingVec, movingDist);
+
+    mEye.Pos.x = mEye.Pos.x + movingVec.x;
+    mEye.Pos.y = mEye.Pos.y + movingVec.y;
+    mEye.Pos.z = mEye.Pos.z + movingVec.z;
 
     mView = MathUtils::MatrixLookAtLH(mEye.Pos, changedLook, changedUp, changedRight);
 }
