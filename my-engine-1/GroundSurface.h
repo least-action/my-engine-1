@@ -47,11 +47,9 @@ public:
             &mVertexBuffer, sizeof(SimpleVertex) * 4, vertices,
             &mIndexBuffer, sizeof(WORD) * 6, indices
         );
-
-        return;
     }
 
-	void Render(ID3D11DeviceContext* context, ID3D11Buffer* constantBuffer)
+	void Render(ID3D11DeviceContext* context, ID3D11Buffer* worldContantBuffer, ID3D11Buffer* sharedContantBuffer)
 	{
         
         context->IASetInputLayout(mInputLayout);
@@ -68,9 +66,10 @@ public:
        
 
         context->VSSetShader(mVertexShader, NULL, 0);
-        context->VSSetConstantBuffers(0, 1, &constantBuffer);
+        context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
+        context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
         context->PSSetShader(mPixelShader, NULL, 0);
-        context->PSSetConstantBuffers(0, 1, &constantBuffer);
+        context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->DrawIndexed(6, 0, 0);
 	}
 };

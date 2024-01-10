@@ -20,6 +20,11 @@ class App {
 		DirectX::XMFLOAT4 vOutputColor;
 	};
 
+	struct WorldContantBuffer
+	{
+		DirectX::XMMATRIX mWorld;
+	};
+
 	struct Eye
 	{
 		DirectX::XMFLOAT3 Pos;
@@ -58,7 +63,9 @@ class App {
 	float mSpeed = 5.0f;
 
 	CubeBox cubeBox;
+	ID3D11Buffer* mCubeBoxWorldConstantBuffer = nullptr;
 	GroundSurface surface;
+	ID3D11Buffer* mSurfaceWorldConstantBuffer = nullptr;
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

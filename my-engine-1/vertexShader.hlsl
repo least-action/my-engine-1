@@ -1,11 +1,16 @@
 cbuffer ConstantBuffer : register(b0)
 {
-    matrix World;
+    matrix World2;
     matrix View;
     matrix Projection;
     float4 vLightDir[2];
     float4 vLightColor[2];
     float4 vOutputColor;
+}
+
+cbuffer WorldBuffer : register(b1)
+{
+    matrix World;
 }
 
 struct VS_INPUT

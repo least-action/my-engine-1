@@ -17,13 +17,16 @@ class CubeBox {
 		DirectX::XMFLOAT3 Normal;
 	};
     
+    struct Model
+    {
+        DirectX::XMFLOAT3 Pos;
+    };
 
     ID3D11Buffer* mVertexBuffer = nullptr;
     ID3D11Buffer* mIndexBuffer = nullptr;
     ID3D11VertexShader* mVertexShader = nullptr;
     ID3D11PixelShader* mPixelShader = nullptr;
     ID3D11InputLayout* mInputLayout = nullptr;
-
     SimpleVertex vertices[24] =
     {
         { DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
@@ -78,7 +81,11 @@ class CubeBox {
         23,20,22
     };
 
+    
+
 public:
+    Model model = Model();
+
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
         // Define the input layout
@@ -99,7 +106,7 @@ public:
         return;
     }
 
-    void Render(ID3D11DeviceContext* context, ID3D11Buffer* constantBuffer)
+    void Render(ID3D11DeviceContext* context, ID3D11Buffer* worldContantBuffer, ID3D11Buffer* sharedContantBuffer)
     {
         context->IASetInputLayout(mInputLayout);
         
@@ -115,9 +122,10 @@ public:
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         context->VSSetShader(mVertexShader, NULL, 0);
-        context->VSSetConstantBuffers(0, 1, &constantBuffer);
+        context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
+        context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
         context->PSSetShader(mPixelShader, NULL, 0);
-        context->PSSetConstantBuffers(0, 1, &constantBuffer);
+        context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->DrawIndexed(36, 0, 0);
     }
 };
