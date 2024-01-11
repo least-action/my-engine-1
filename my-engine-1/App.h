@@ -62,9 +62,7 @@ class App {
 	float mSpeed = 5.0f;
 
 	CubeBox cubeBox;
-	ID3D11Buffer* mCubeBoxWorldConstantBuffer = nullptr;
 	GroundSurface surface;
-	ID3D11Buffer* mSurfaceWorldConstantBuffer = nullptr;
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

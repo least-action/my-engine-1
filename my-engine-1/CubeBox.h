@@ -16,6 +16,11 @@ class CubeBox {
 		DirectX::XMFLOAT3 Pos;
 		DirectX::XMFLOAT3 Normal;
 	};
+
+    struct WorldContantBuffer
+    {
+        DirectX::XMMATRIX mWorld;
+    };
     
     struct Model
     {
@@ -24,6 +29,7 @@ class CubeBox {
 
     ID3D11Buffer* mVertexBuffer = nullptr;
     ID3D11Buffer* mIndexBuffer = nullptr;
+    ID3D11Buffer* worldContantBuffer = nullptr;
     ID3D11VertexShader* mVertexShader = nullptr;
     ID3D11PixelShader* mPixelShader = nullptr;
     ID3D11InputLayout* mInputLayout = nullptr;
@@ -103,11 +109,34 @@ public:
             &mIndexBuffer, sizeof(WORD) * 36, indices
         );
 
-        return;
+        // Create the constant buffer
+        HRESULT hr;
+        D3D11_BUFFER_DESC bd;
+        ZeroMemory(&bd, sizeof(bd));
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = sizeof(WorldContantBuffer);
+        bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        bd.CPUAccessFlags = 0;
+        hr = device->CreateBuffer(&bd, NULL, &worldContantBuffer);
+        if (FAILED(hr)) {
+            printf("CreateBuffer(mSurfaceWorldConstantBuffer) error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
     }
 
-    void Render(ID3D11DeviceContext* context, ID3D11Buffer* worldContantBuffer, ID3D11Buffer* sharedContantBuffer)
+    void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer)
     {
+        WorldContantBuffer wb;
+        wb.mWorld = DirectX::XMMatrixTranspose(
+            {
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                model.Pos.x, model.Pos.y, model.Pos.z, 1.0f,
+            }
+        );
+        context->UpdateSubresource(worldContantBuffer, 0, NULL, &wb, 0, 0);
+
         context->IASetInputLayout(mInputLayout);
         
         UINT stride = sizeof(SimpleVertex);

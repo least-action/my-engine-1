@@ -153,36 +153,12 @@ HRESULT App::InitD3D()
         return hr;
     }
 
-    // Create the constant buffer
-    ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(WorldContantBuffer);
-    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    bd.CPUAccessFlags = 0;
-    hr = mDevice->CreateBuffer(&bd, NULL, &mCubeBoxWorldConstantBuffer);
-    if (FAILED(hr)) {
-        printf("CreateBuffer(mCubeBoxWorldConstantBuffer) error : %08X\n", hr);
-        return hr;
-    }
-    // Create the constant buffer
-    ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(WorldContantBuffer);
-    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    bd.CPUAccessFlags = 0;
-    hr = mDevice->CreateBuffer(&bd, NULL, &mSurfaceWorldConstantBuffer);
-    if (FAILED(hr)) {
-        printf("CreateBuffer(mSurfaceWorldConstantBuffer) error : %08X\n", hr);
-        return hr;
-    }
-
     // Initialize the world matrices
     mWorld = DirectX::XMMatrixIdentity();
 
     // Initialize the view matrix
     mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up, mEye.Right);
     
-
     // Initialize the projection matrix
     mProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
 
@@ -369,28 +345,15 @@ void App::Render()
     cb1.vOutputColor = DirectX::XMFLOAT4(0, 0, 0, 0);
     mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
 
-    WorldContantBuffer wb;
-    wb.mWorld = DirectX::XMMatrixTranspose(
-        {
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            cubeBox.model.Pos.x, cubeBox.model.Pos.y, cubeBox.model.Pos.z, 1.0f,
-        }
-    );
-    mContext->UpdateSubresource(mCubeBoxWorldConstantBuffer, 0, NULL, &wb, 0, 0);
-    wb.mWorld = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0));
-    mContext->UpdateSubresource(mSurfaceWorldConstantBuffer, 0, NULL, &wb, 0, 0);
-
     //
     // Render the ground surface
     //
-    surface.Render(mContext, mSurfaceWorldConstantBuffer, mConstantBuffer);
+    surface.Render(mContext, mConstantBuffer);
 
     //
     // Render the cube
     //
-    cubeBox.Render(mContext, mCubeBoxWorldConstantBuffer, mConstantBuffer);
+    cubeBox.Render(mContext, mConstantBuffer);
 
     //
     // Present our back buffer to our front buffer
