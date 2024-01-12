@@ -157,7 +157,7 @@ HRESULT App::InitD3D()
     mWorld = DirectX::XMMatrixIdentity();
 
     // Initialize the view matrix
-    mView = MathUtils::MatrixLookAtLH(mEye.Pos, mEye.Look, mEye.Up, mEye.Right);
+    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look)).ToXMMATRIX();
     
     // Initialize the projection matrix
     mProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
@@ -214,9 +214,12 @@ void App::UpdateModels()
     static bool isRightClickJustClick = true;
     static POINT startPoint;
     static POINT currentPoint;
-    static DirectX::XMFLOAT3 changedLook = mEye.Look;
-    static DirectX::XMFLOAT3 changedUp = mEye.Up;
-    static DirectX::XMFLOAT3 changedRight = mEye.Right;
+    
+    static MathUtils::Vector changedLook = mCamera.Look;
+    static MathUtils::Vector changedUp = mCamera.Up;
+    static MathUtils::Vector changedRight = mCamera.Up.Cross(mCamera.Look);
+
+    MathUtils::Vector cameraRight = mCamera.Up.Cross(mCamera.Look);
     
     if (mMainWindow->IsRightClickDown()) {
         GetCursorPos(&currentPoint);
@@ -228,67 +231,47 @@ void App::UpdateModels()
         float deltaYaw = (currentPoint.x - startPoint.x) / 360.0f;
         float deltaPitch = -(currentPoint.y - startPoint.y) / 360.0f;
 
-        DirectX::XMMATRIX rotationYaw = MathUtils::BuildRotation({0.0f, 1.0f, 0.0f}, deltaYaw);
-        DirectX::XMStoreFloat3(&changedRight, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Right), rotationYaw));
+        MathUtils::Matrix rotationYaw = MathUtils::BuildRotation2({ 0.0f, 1.0f, 0.0f }, deltaYaw);
+        changedRight = cameraRight * rotationYaw;
 
-        DirectX::XMMATRIX rotationPitch = MathUtils::BuildRotation(changedRight, -deltaPitch);
-        DirectX::XMMATRIX rotationMatrix = rotationYaw * rotationPitch;
+        MathUtils::Matrix rotationPitch = MathUtils::BuildRotation2(changedRight, -deltaPitch);
+        MathUtils::Matrix rotationMatrix = rotationYaw * rotationPitch;
 
-        DirectX::XMStoreFloat3(&changedLook, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Look), rotationMatrix));
-        DirectX::XMStoreFloat3(&changedUp, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Up), rotationMatrix));
-        DirectX::XMStoreFloat3(&changedRight, DirectX::XMVector4Transform(DirectX::XMLoadFloat3(&mEye.Right), rotationMatrix));
+        changedLook = mCamera.Look * rotationMatrix;
+        changedUp = mCamera.Up * rotationMatrix;
     }
     else {
         if (!isRightClickJustClick) {
             isRightClickJustClick = true;
 
-            mEye.Look = changedLook;
-            mEye.Up = changedUp;
-            mEye.Right = changedRight;
-            float ll = sqrt(mEye.Look.x * mEye.Look.x + mEye.Look.y * mEye.Look.y + mEye.Look.z * mEye.Look.z);
-            mEye.Look.x = mEye.Look.x / ll;
-            mEye.Look.y = mEye.Look.y / ll;
-            mEye.Look.z = mEye.Look.z / ll;
-            float dd = mEye.Look.x * mEye.Right.x + mEye.Look.y * mEye.Right.y + mEye.Look.z * mEye.Right.z;
-            mEye.Right.x = mEye.Right.x - dd * mEye.Look.x;
-            mEye.Right.y = mEye.Right.y - dd * mEye.Look.y;
-            mEye.Right.z = mEye.Right.z - dd * mEye.Look.z;
-            float lr = sqrt(mEye.Right.x * mEye.Right.x + mEye.Right.y * mEye.Right.y + mEye.Right.z * mEye.Right.z);
-            mEye.Right.x = mEye.Right.x / lr;
-            mEye.Right.y = mEye.Right.y / lr;
-            mEye.Right.z = mEye.Right.z / lr;
-            mEye.Up.x = mEye.Look.y * mEye.Right.z - mEye.Look.z * mEye.Right.y;
-            mEye.Up.y = mEye.Look.z * mEye.Right.x - mEye.Look.x * mEye.Right.z;
-            mEye.Up.z = mEye.Look.x * mEye.Right.y - mEye.Look.y * mEye.Right.x;
+            mCamera.Look = changedLook;
+            mCamera.Up = changedUp;
+
+            mCamera.Look = mCamera.Look * (1.0f / mCamera.Look.length());
+
+            mCamera.Up = mCamera.Up - (mCamera.Look * mCamera.Look.Dot(mCamera.Up));
+            mCamera.Up = mCamera.Up * (1.0f / mCamera.Up.length());
         }
-        changedLook = mEye.Look;
-        changedUp = mEye.Up;
-        changedRight = mEye.Right;
+        changedLook = mCamera.Look;
+        changedUp = mCamera.Up;
     }
 
-    DirectX::XMVECTOR movingDir = { 0.0f, };
+    MathUtils::Vector movingDir = { 0.0f, 0.0f, 0.0f };
     if (mMainWindow->IsRightDown() && !mMainWindow->IsLeftDown()) {
-        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&changedRight));
+        movingDir = movingDir + changedRight;
     }
     else if (!mMainWindow->IsRightDown() && mMainWindow->IsLeftDown()) {
-        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&changedRight));
+        movingDir = movingDir - changedRight;
     }
     if (mMainWindow->IsUpDown() && !mMainWindow->IsDownDown()) {
-        movingDir = DirectX::XMVectorAdd(movingDir, DirectX::XMLoadFloat3(&changedLook));
+        movingDir = movingDir + changedLook;
     }
     else if (!mMainWindow->IsUpDown() && mMainWindow->IsDownDown()) {
-        movingDir = DirectX::XMVectorSubtract(movingDir, DirectX::XMLoadFloat3(&changedLook));
+        movingDir = movingDir - changedLook;
     }
+    mCamera.Pos = mCamera.Pos + (movingDir * (dt * mSpeed));
 
-    DirectX::XMVECTOR movingDist = DirectX::XMVectorScale(DirectX::XMVector4Normalize(movingDir), dt * mSpeed);
-    DirectX::XMFLOAT3 movingVec;
-    DirectX::XMStoreFloat3(&movingVec, movingDist);
-
-    mEye.Pos.x = mEye.Pos.x + movingVec.x;
-    mEye.Pos.y = mEye.Pos.y + movingVec.y;
-    mEye.Pos.z = mEye.Pos.z + movingVec.z;
-
-    mView = MathUtils::MatrixLookAtLH(mEye.Pos, changedLook, changedUp, changedRight);
+    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook)).ToXMMATRIX();
 
     // Update cube
     cubeBox.model.Pos = {
