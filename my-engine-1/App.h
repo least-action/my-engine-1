@@ -53,7 +53,6 @@ class App {
 	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 	ID3D11Buffer* mConstantBuffer = nullptr;
 
-	MathUtils::Matrix mWorld;
 	MathUtils::Matrix mView;
 	DirectX::XMMATRIX mProjection;
 

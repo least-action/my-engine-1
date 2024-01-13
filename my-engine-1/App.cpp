@@ -153,9 +153,6 @@ HRESULT App::InitD3D()
         return hr;
     }
 
-    // Initialize the world matrices
-    mWorld = MathUtils::IdendityMatrix();
-
     // Initialize the view matrix
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look));
     
@@ -282,9 +279,6 @@ void App::UpdateModels()
 void App::Render()
 {
     UpdateModels();
-
-    // Rotate cube around the origin
-    mWorld = MathUtils::IdendityMatrix();
 
     // Setup our lighting parameters
     DirectX::XMFLOAT4 vLightDirs[2] =
