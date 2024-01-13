@@ -231,10 +231,10 @@ void App::UpdateModels()
         float deltaYaw = (currentPoint.x - startPoint.x) / 360.0f;
         float deltaPitch = -(currentPoint.y - startPoint.y) / 360.0f;
 
-        MathUtils::Matrix rotationYaw = MathUtils::BuildRotation2({ 0.0f, 1.0f, 0.0f }, deltaYaw);
+        MathUtils::Matrix rotationYaw = MathUtils::BuildRotation({ 0.0f, 1.0f, 0.0f }, deltaYaw);
         changedRight = cameraRight * rotationYaw;
 
-        MathUtils::Matrix rotationPitch = MathUtils::BuildRotation2(changedRight, -deltaPitch);
+        MathUtils::Matrix rotationPitch = MathUtils::BuildRotation(changedRight, -deltaPitch);
         MathUtils::Matrix rotationMatrix = rotationYaw * rotationPitch;
 
         changedLook = mCamera.Look * rotationMatrix;

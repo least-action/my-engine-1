@@ -3,7 +3,7 @@
 #include <directxmath.h>
 
 namespace MathUtils {
-	void PrintMatrix(DirectX::XMMATRIX m);
+	void PrintXMMATRIX(DirectX::XMMATRIX m);
 	void PrintFloat3(DirectX::XMFLOAT3 f);
 
 	class Matrix {
@@ -48,9 +48,9 @@ namespace MathUtils {
 
 	Matrix MatrixLookAtLH(Point pos, Vector look, Vector up, Vector right);
 
-	Matrix BuildRotation2(const Vector& axis, float theta);
+	Matrix BuildRotation(const Vector& axis, float theta);
 
-	void PrintMatrix2(const Matrix& m);
+	void PrintMatrix(const Matrix& m);
 	void PrintVector(const Vector& v);
 
 }

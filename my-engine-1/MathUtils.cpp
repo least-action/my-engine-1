@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 namespace MathUtils {
-	void PrintMatrix(DirectX::XMMATRIX m)
+	void PrintXMMATRIX(DirectX::XMMATRIX m)
 	{
 		printf(
 			"%f %f %f %f\n"
@@ -150,7 +150,7 @@ namespace MathUtils {
 		return translation * rotate;
 	}
 
-	Matrix BuildRotation2(const Vector &axis, float theta)
+	Matrix BuildRotation(const Vector &axis, float theta)
 	{
 		float c = cos(theta);
 		float s = sin(theta);
@@ -181,7 +181,7 @@ namespace MathUtils {
 		};
 	}
 
-	void PrintMatrix2(const Matrix &m)
+	void PrintMatrix(const Matrix &m)
 	{
 		printf(
 			"%f %f %f %f\n"
