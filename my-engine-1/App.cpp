@@ -157,7 +157,7 @@ HRESULT App::InitD3D()
     mWorld = DirectX::XMMatrixIdentity();
 
     // Initialize the view matrix
-    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look)).ToXMMATRIX();
+    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look));
     
     // Initialize the projection matrix
     mProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f);
@@ -271,7 +271,7 @@ void App::UpdateModels()
     }
     mCamera.Pos = mCamera.Pos + (movingDir * (dt * mSpeed));
 
-    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook)).ToXMMATRIX();
+    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
 
     // Update cube
     cubeBox.model.Pos = {
@@ -319,7 +319,7 @@ void App::Render()
     // Update matrix variables and lighting variables
     //
     ConstantBuffer cb1;
-    cb1.mView = DirectX::XMMatrixTranspose(mView);
+    cb1.mView = mView.Transposed();
     cb1.mProjection = DirectX::XMMatrixTranspose(mProjection);
     cb1.vLightDir[0] = vLightDirs[0];
     cb1.vLightDir[1] = vLightDirs[1];

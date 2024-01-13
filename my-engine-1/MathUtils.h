@@ -3,8 +3,6 @@
 #include <directxmath.h>
 
 namespace MathUtils {
-	DirectX::XMMATRIX XMMatrixLookAtLH(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 look, DirectX::XMFLOAT3 up, DirectX::XMFLOAT3 right);
-	DirectX::XMMATRIX BuildRotation(DirectX::XMFLOAT3 axis, float theta);
 	void PrintMatrix(DirectX::XMMATRIX m);
 	void PrintFloat3(DirectX::XMFLOAT3 f);
 
@@ -14,6 +12,7 @@ namespace MathUtils {
 		float _10, _11, _12, _13;
 		float _20, _21, _22, _23;
 		float _30, _31, _32, _33;
+		Matrix();
 		Matrix(
 			float _00, float _01, float _02, float _03,
 			float _10, float _11, float _12, float _13,
@@ -23,6 +22,7 @@ namespace MathUtils {
 
 		Matrix operator*(const Matrix &a);
 		DirectX::XMMATRIX ToXMMATRIX();
+		Matrix Transposed();
 	};
 
 	class Vector {
@@ -51,4 +51,5 @@ namespace MathUtils {
 
 	void PrintMatrix2(const Matrix& m);
 	void PrintVector(const Vector& v);
+
 }

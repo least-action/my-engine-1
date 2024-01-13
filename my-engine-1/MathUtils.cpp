@@ -3,57 +3,6 @@
 #include <stdio.h>
 
 namespace MathUtils {
-	DirectX::XMMATRIX XMMatrixLookAtLH(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 look, DirectX::XMFLOAT3 up, DirectX::XMFLOAT3 right)
-	{
-		DirectX::XMMATRIX i = DirectX::XMMatrixIdentity();
-		DirectX::XMMATRIX translation = {
-			1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			-pos.x, -pos.y, -pos.z, 1.0f,
-		};
-		
-		DirectX::XMMATRIX rotate = {
-			right.x, up.x, look.x, 0.0f,
-			right.y, up.y, look.y, 0.0f,
-			right.z, up.z, look.z, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f,
-		};
-		
-		return i * translation * rotate;
-	}
-
-	DirectX::XMMATRIX BuildRotation(DirectX::XMFLOAT3 axis, float theta)
-	{
-		float c = cos(theta);
-		float s = sin(theta);
-
-		DirectX::XMFLOAT3 tX = {
-			axis.x* axis.x* (1 - c) + c,
-			axis.x* axis.y* (1 - c) + axis.z * s,
-			axis.x* axis.z* (1 - c) - axis.y * s,
-		};
-
-		DirectX::XMFLOAT3 tY = {
-			axis.y* axis.x* (1 - c) - axis.z * s,
-			axis.y* axis.y* (1 - c) + c,
-			axis.y* axis.z* (1 - c) + axis.x * s,
-		};
-
-		DirectX::XMFLOAT3 tZ = {
-			axis.z* axis.x* (1 - c) + axis.y * s,
-			axis.z* axis.y* (1 - c) - axis.x * s,
-			axis.z* axis.z* (1 - c) + c,
-		};
-
-		return {
-			tX.x, tX.y, tX.z, 0.0f,
-			tY.x, tY.y, tY.z, 0.0f,
-			tZ.x, tZ.y, tZ.z, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f,
-		};
-	}
-
 	void PrintMatrix(DirectX::XMMATRIX m)
 	{
 		printf(
@@ -119,6 +68,7 @@ namespace MathUtils {
 		return sqrt(x * x + y * y + z * z);
 	}
 
+	Matrix::Matrix() {}
 	Matrix::Matrix(
 		float _00, float _01, float _02, float _03,
 		float _10, float _11, float _12, float _13,
@@ -162,6 +112,16 @@ namespace MathUtils {
 			_10, _11, _12, _13,
 			_20, _21, _22, _23,
 			_30, _31, _32, _33
+		};
+	}
+
+	Matrix Matrix::Transposed()
+	{
+		return {
+			_00, _10, _20, _30,
+			_01, _11, _21, _31,
+			_02, _12, _22, _32,
+			_03, _13, _23, _33
 		};
 	}
 

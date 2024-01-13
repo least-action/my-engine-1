@@ -12,7 +12,7 @@
 class App {
 	struct ConstantBuffer
 	{
-		DirectX::XMMATRIX mView;
+		MathUtils::Matrix mView;
 		DirectX::XMMATRIX mProjection;
 		DirectX::XMFLOAT4 vLightDir[2];
 		DirectX::XMFLOAT4 vLightColor[2];
@@ -54,7 +54,7 @@ class App {
 	ID3D11Buffer* mConstantBuffer = nullptr;
 
 	DirectX::XMMATRIX mWorld;
-	DirectX::XMMATRIX mView;
+	MathUtils::Matrix mView;
 	DirectX::XMMATRIX mProjection;
 
 	float mSpeed = 10.0f;
