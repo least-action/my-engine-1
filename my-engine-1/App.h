@@ -12,7 +12,7 @@
 class App {
 	struct ConstantBuffer
 	{
-		DirectX::XMMATRIX mView;
+		MathUtils::Matrix mView;
 		DirectX::XMMATRIX mProjection;
 		DirectX::XMFLOAT4 vLightDir[2];
 		DirectX::XMFLOAT4 vLightColor[2];
@@ -21,7 +21,7 @@ class App {
 
 	struct WorldContantBuffer
 	{
-		DirectX::XMMATRIX mWorld;
+		MathUtils::Matrix mWorld;
 	};
 
 	struct Camera
@@ -53,7 +53,7 @@ class App {
 	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 	ID3D11Buffer* mConstantBuffer = nullptr;
 
-	DirectX::XMMATRIX mWorld;
+	MathUtils::Matrix mWorld;
 	MathUtils::Matrix mView;
 	DirectX::XMMATRIX mProjection;
 

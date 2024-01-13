@@ -154,7 +154,7 @@ HRESULT App::InitD3D()
     }
 
     // Initialize the world matrices
-    mWorld = DirectX::XMMatrixIdentity();
+    mWorld = MathUtils::IdendityMatrix();
 
     // Initialize the view matrix
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look));
@@ -284,7 +284,7 @@ void App::Render()
     UpdateModels();
 
     // Rotate cube around the origin
-    mWorld = DirectX::XMMatrixRotationY(0);
+    mWorld = MathUtils::IdendityMatrix();
 
     // Setup our lighting parameters
     DirectX::XMFLOAT4 vLightDirs[2] =
@@ -319,7 +319,7 @@ void App::Render()
     // Update matrix variables and lighting variables
     //
     ConstantBuffer cb1;
-    cb1.mView = DirectX::XMMatrixTranspose(mView.ToXMMATRIX());
+    cb1.mView = mView.Transposed();
     cb1.mProjection = DirectX::XMMatrixTranspose(mProjection);
     cb1.vLightDir[0] = vLightDirs[0];
     cb1.vLightDir[1] = vLightDirs[1];

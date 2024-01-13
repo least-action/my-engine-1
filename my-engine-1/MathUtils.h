@@ -21,9 +21,11 @@ namespace MathUtils {
 		);
 
 		Matrix operator*(const Matrix &a);
-		DirectX::XMMATRIX ToXMMATRIX();
+		Matrix Transposed();
 	};
 
+	Matrix IdendityMatrix();
+	
 	class Vector {
 	public:
 		float x, y, z, w = 0.0f;
