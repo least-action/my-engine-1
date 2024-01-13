@@ -12,7 +12,7 @@
 class App {
 	struct ConstantBuffer
 	{
-		MathUtils::Matrix mView;
+		DirectX::XMMATRIX mView;
 		DirectX::XMMATRIX mProjection;
 		DirectX::XMFLOAT4 vLightDir[2];
 		DirectX::XMFLOAT4 vLightColor[2];

@@ -69,6 +69,7 @@ namespace MathUtils {
 	}
 
 	Matrix::Matrix() {}
+
 	Matrix::Matrix(
 		float _00, float _01, float _02, float _03,
 		float _10, float _11, float _12, float _13,
@@ -112,16 +113,6 @@ namespace MathUtils {
 			_10, _11, _12, _13,
 			_20, _21, _22, _23,
 			_30, _31, _32, _33
-		};
-	}
-
-	Matrix Matrix::Transposed()
-	{
-		return {
-			_00, _10, _20, _30,
-			_01, _11, _21, _31,
-			_02, _12, _22, _32,
-			_03, _13, _23, _33
 		};
 	}
 

@@ -22,7 +22,6 @@ namespace MathUtils {
 
 		Matrix operator*(const Matrix &a);
 		DirectX::XMMATRIX ToXMMATRIX();
-		Matrix Transposed();
 	};
 
 	class Vector {
