@@ -318,6 +318,7 @@ void App::Render()
     cb1.vLightColor[0] = vLightColors[0];
     cb1.vLightColor[1] = vLightColors[1];
     cb1.vOutputColor = DirectX::XMFLOAT4(0, 0, 0, 0);
+    cb1.mBlackholePos = mBlackholePos;
     mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
 
     //

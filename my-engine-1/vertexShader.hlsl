@@ -5,6 +5,7 @@ cbuffer ConstantBuffer : register(b0)
     float4 vLightDir[2];
     float4 vLightColor[2];
     float4 vOutputColor;
+    float4 blackholePos;
 }
 
 cbuffer WorldBuffer : register(b1)
@@ -30,6 +31,10 @@ PS_INPUT main(VS_INPUT input)
     PS_INPUT output = (PS_INPUT) 0;
     output.Pos = mul(input.Pos, World);
     output.Pos = mul(output.Pos, View);
+    float4 caculatedBlackholePos;
+    caculatedBlackholePos = mul(blackholePos, World);
+    caculatedBlackholePos = mul(caculatedBlackholePos, View);
+    
     output.Pos = mul(output.Pos, Projection);
     output.Norm = mul(input.Norm, World);
     output.Color = float4(0.3, 0.5, 0.5, 1.0);

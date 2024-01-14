@@ -5,6 +5,7 @@ cbuffer ConstantBuffer : register(b0)
     float4 vLightDir[2];
     float4 vLightColor[2];
     float4 vOutputColor;
+    float4 blackholePos;
 }
 
 struct PS_INPUT

@@ -42,6 +42,7 @@ namespace MathUtils {
 	class Point {
 	public:
 		float x, y, z, w = 1.0f;
+		Point();
 		Point(float x, float y, float z);
 		Point operator+(const Vector& v);
 	};

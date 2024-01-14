@@ -21,6 +21,8 @@ namespace MathUtils {
 		printf("%f %f %f\n", f.x, f.y, f.z);
 	}
 
+	Point::Point() {}
+
 	Point::Point(float x, float y, float z) : x(x), y(y), z(z) {}
 
 	Vector::Vector(float x, float y, float z) : x(x), y(y), z(z) {}

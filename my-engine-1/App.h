@@ -17,6 +17,7 @@ class App {
 		DirectX::XMFLOAT4 vLightDir[2];
 		DirectX::XMFLOAT4 vLightColor[2];
 		DirectX::XMFLOAT4 vOutputColor;
+		MathUtils::Point mBlackholePos;
 	};
 
 	struct WorldContantBuffer
@@ -31,7 +32,7 @@ class App {
 		MathUtils::Vector Up;
 	};
 	Camera mCamera = {
-		{0.0f, 1.6f, -10.f},
+		{0.0f, 1.6f, -20.0f},
 		{0.0f, 0.0f, 1.0f},
 		{0.0f, 1.0f, 0.0f}
 	};
@@ -55,6 +56,7 @@ class App {
 
 	MathUtils::Matrix mView;
 	MathUtils::Matrix mProjection;
+	MathUtils::Point mBlackholePos = {0.0f, 0.0f, -10.0f};
 
 	float mSpeed = 10.0f;
 
