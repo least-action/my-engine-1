@@ -47,6 +47,7 @@ namespace MathUtils {
 	};
 
 	Matrix MatrixLookAtLH(Point pos, Vector look, Vector up, Vector right);
+	Matrix MatrixPerspectiveForLH(float fieldOfViewAngleY, float aspectRatio, float nearZ, float farZ);
 
 	Matrix BuildRotation(const Vector& axis, float theta);
 

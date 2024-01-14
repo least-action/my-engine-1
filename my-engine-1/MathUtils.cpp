@@ -131,7 +131,7 @@ namespace MathUtils {
 		return {x + v.x, y + v.y, z + v.z};
 	}
 
-	MathUtils::Matrix MatrixLookAtLH(MathUtils::Point pos, MathUtils::Vector look, MathUtils::Vector up, MathUtils::Vector right)
+	Matrix MatrixLookAtLH(MathUtils::Point pos, MathUtils::Vector look, MathUtils::Vector up, MathUtils::Vector right)
 	{
 		Matrix translation = {
 			1.0f, 0.0f, 0.0f, 0.0f,
@@ -148,6 +148,17 @@ namespace MathUtils {
 		};
 
 		return translation * rotate;
+	}
+
+	Matrix MatrixPerspectiveForLH(float fieldOfViewAngleY, float aspectRatio, float nearZ, float farZ)
+	{
+		float tanHalf = tan(fieldOfViewAngleY / 2.0f);
+		return {
+			float(1.0f / (aspectRatio * tanHalf)), 0.0f, 0.0f, 0.0f,
+			0.0f, float(1.0f / tanHalf), 0.0f, 0.0f,
+			0.0f, 0.0f, farZ / (farZ - nearZ), 1.0f,
+			0.0f, 0.0f, -(nearZ * farZ) / (farZ - nearZ), 0.0f,
+		};
 	}
 
 	Matrix BuildRotation(const Vector &axis, float theta)
