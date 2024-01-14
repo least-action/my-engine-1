@@ -22,18 +22,24 @@ class GroundSurface
     ID3D11PixelShader* mPixelShader = nullptr;
     ID3D11InputLayout* mInputLayout = nullptr;
 
-    SimpleVertex vertices[4] =
+    SimpleVertex vertices[8] =
     {
         { DirectX::XMFLOAT3(-10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
         { DirectX::XMFLOAT3(10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
         { DirectX::XMFLOAT3(10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
         { DirectX::XMFLOAT3(-10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(-10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(-10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) }
     };
 
-    WORD indices[6] =
+    WORD indices[12] =
     {
         3,1,0,
         2,1,3,
+        4,5,7,
+        7,5,6
     };
 
 public:
@@ -50,8 +56,8 @@ public:
 
         D3DUtils::CreateVertexBufferWithIndexBuffer(
             device,
-            &mVertexBuffer, sizeof(SimpleVertex) * 4, vertices,
-            &mIndexBuffer, sizeof(WORD) * 6, indices
+            &mVertexBuffer, sizeof(SimpleVertex) * 8, vertices,
+            &mIndexBuffer, sizeof(WORD) * 12, indices
         );
 
         // Create the constant buffer
@@ -93,6 +99,6 @@ public:
         context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
         context->PSSetShader(mPixelShader, NULL, 0);
         context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
-        context->DrawIndexed(6, 0, 0);
+        context->DrawIndexed(12, 0, 0);
 	}
 };
