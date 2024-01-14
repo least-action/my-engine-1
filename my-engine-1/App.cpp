@@ -139,6 +139,7 @@ HRESULT App::InitD3D()
 
     surface.Initialize(mDevice, mContext);
     cubeBox.Initialize(mDevice, mContext);
+    sphere.Initialize(mDevice, mContext);
     
     // Create the constant buffer
     D3D11_BUFFER_DESC bd;
@@ -271,7 +272,7 @@ void App::UpdateModels()
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
 
     // Update cube
-    cubeBox.model.Pos = {cos(t * 10.0f), 0.0f, sin(t * 10.0f)};
+    cubeBox.model.Pos = {10.0f * cos(t * 1.0f), 0.0f, 10.0f * sin(t * 1.0f)};
 }
 
 void App::Render()
@@ -322,14 +323,11 @@ void App::Render()
     mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
 
     //
-    // Render the ground surface
+    // Render
     //
     surface.Render(mContext, mConstantBuffer);
-
-    //
-    // Render the cube
-    //
     cubeBox.Render(mContext, mConstantBuffer);
+    sphere.Render(mContext, mConstantBuffer);
 
     //
     // Present our back buffer to our front buffer

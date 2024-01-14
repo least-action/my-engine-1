@@ -1,6 +1,7 @@
 #pragma once
 #include "MainWindow.h"
 #include "CubeBox.h"
+#include "Sphere.h"
 #include "GroundSurface.h"
 #include "MathUtils.h"
 #include <windows.h>
@@ -62,6 +63,7 @@ class App {
 
 	CubeBox cubeBox;
 	GroundSurface surface;
+	Sphere sphere;
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

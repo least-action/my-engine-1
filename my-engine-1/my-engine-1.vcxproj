@@ -143,6 +143,7 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pixelShader.hlsl">
