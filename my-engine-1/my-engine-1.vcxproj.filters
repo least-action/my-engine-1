@@ -65,4 +65,12 @@
       <Filter>Source Files</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\study\hjm\HongLabGraphicsPart3_Ch9_v6-230410-175402\Assets\Textures\earth.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

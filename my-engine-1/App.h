@@ -63,7 +63,7 @@ class App {
 
 	CubeBox cubeBox;
 	GroundSurface surface;
-	Sphere sphere;
+	Sphere sphere{ 1.0f, 10, 10 };
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

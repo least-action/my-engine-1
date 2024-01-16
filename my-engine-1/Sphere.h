@@ -11,6 +11,7 @@
 
 
 class Sphere {
+    float radius;
     struct SimpleVertex
     {
         MathUtils::Point Pos;
@@ -87,13 +88,42 @@ class Sphere {
         23,20,22
     };
 
+    int thetaDivision, phiDivision;
+
+    SimpleVertex** pVerticies = nullptr;
+    WORD* pIndices = nullptr;
 
 
 public:
+    Sphere(float radius, int thetaDivision, int phiDivision)
+    {
+        if (!(radius > 0))
+            throw std::runtime_error("radius must be greater than 0");
+        if (thetaDivision < 2 || phiDivision < 2)
+            throw std::runtime_error("division should be greater than 2");
+        this->radius = radius;
+        this->thetaDivision = thetaDivision;
+        this->phiDivision = phiDivision;
+    }
+
     Model model = Model();
 
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
+        // build verticies and indices
+        std::vector<SimpleVertex> verticies2;
+        int verticiesNum = thetaDivision * (phiDivision - 1) + 2;
+        verticies2.reserve(verticiesNum);
+        std::vector<WORD> indices2;
+        int indiciesNum = (thetaDivision * 2 * 3) + (thetaDivision * (phiDivision - 2) * 6);
+        indices2.reserve(indiciesNum);
+        for (int i = 0; i < thetaDivision; i++) {
+            for (int j = 0; j < phiDivision; j++) {
+                ;
+            }
+        }
+
+
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
