@@ -30,4 +30,11 @@ namespace D3DUtils {
         UINT indexBufferByteWidth,
         const void* indexDataMem
     );
+
+    void CreateTexture(
+        ID3D11Device* device,
+        const char* fileName,
+        ID3D11Texture2D** texture,
+        ID3D11ShaderResourceView** resourceView
+    );
 }

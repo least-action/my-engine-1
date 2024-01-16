@@ -272,7 +272,7 @@ void App::UpdateModels()
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
 
     // Update cube
-    cubeBox.model.Pos = {10.0f * cos(t * 1.0f), 0.0f, 10.0f * sin(t * 1.0f)};
+    cubeBox.model.Pos = {5.0f * cos(t * 0.5f), 0.0f, 5.0f * sin(t * 0.5f)};
 }
 
 void App::Render()

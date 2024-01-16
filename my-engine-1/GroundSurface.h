@@ -52,7 +52,7 @@ public:
             { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
         D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
-        D3DUtils::CreatePixelShader(device, L"pixelShader.hlsl", &mPixelShader);
+        D3DUtils::CreatePixelShader(device, L"shaderGroundPixel.hlsl", &mPixelShader);
 
         D3DUtils::CreateVertexBufferWithIndexBuffer(
             device,

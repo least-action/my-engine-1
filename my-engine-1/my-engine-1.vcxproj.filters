@@ -56,6 +56,9 @@
     <ClInclude Include="Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ComInitializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vertexShader.hlsl">
@@ -64,12 +67,24 @@
     <FxCompile Include="pixelShader.hlsl">
       <Filter>Source Files</Filter>
     </FxCompile>
+    <FxCompile Include="shaderContainerPixel.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderGroundPixel.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderContainerVertex.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\study\hjm\HongLabGraphicsPart3_Ch9_v6-230410-175402\Assets\Textures\earth.jpg">
+    <Image Include="container.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="D:\download\container.jpg">
+    <Image Include="earth.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="woodbox.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
