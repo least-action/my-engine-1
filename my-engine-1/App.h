@@ -54,6 +54,8 @@ class App {
 	ID3D11Texture2D* mDepthStencil = nullptr;
 	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 	ID3D11Buffer* mConstantBuffer = nullptr;
+	ID3D11RasterizerState* mDefaultRasterizer = nullptr;
+	ID3D11RasterizerState* mWireRasterizer = nullptr;
 
 	MathUtils::Matrix mView;
 	MathUtils::Matrix mProjection;
@@ -63,7 +65,7 @@ class App {
 
 	CubeBox cubeBox;
 	GroundSurface surface;
-	Sphere sphere{ 1.0f, 10, 10 };
+	Sphere sphere{ 5.0f, 10, 10 };
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

@@ -91,6 +91,19 @@ HRESULT App::InitD3D()
         return hr;
     }
 
+    D3D11_RASTERIZER_DESC rasterDesc;
+    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+    rasterDesc.FillMode = D3D11_FILL_SOLID;
+    rasterDesc.CullMode = D3D11_CULL_BACK;
+    rasterDesc.DepthClipEnable = true;
+    mDevice->CreateRasterizerState(&rasterDesc, &mDefaultRasterizer);
+
+    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+    rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+    rasterDesc.CullMode = D3D11_CULL_BACK;
+    rasterDesc.DepthClipEnable = true;
+    mDevice->CreateRasterizerState(&rasterDesc, &mWireRasterizer);
+
     
     // Create depth stencil texture
     D3D11_TEXTURE2D_DESC descDepth;
@@ -327,7 +340,7 @@ void App::Render()
     //
     surface.Render(mContext, mConstantBuffer);
     cubeBox.Render(mContext, mConstantBuffer);
-    sphere.Render(mContext, mConstantBuffer);
+    sphere.Render(mContext, mConstantBuffer, mWireRasterizer, mDefaultRasterizer);
 
     //
     // Present our back buffer to our front buffer

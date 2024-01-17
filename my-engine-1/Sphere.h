@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <stdio.h>
 
+const float PI = 3.14159265358979323846;
 
 class Sphere {
     float radius;
@@ -89,10 +90,7 @@ class Sphere {
     };
 
     int thetaDivision, phiDivision;
-
-    SimpleVertex** pVerticies = nullptr;
-    WORD* pIndices = nullptr;
-
+    int indicesNum;
 
 public:
     Sphere(float radius, int thetaDivision, int phiDivision)
@@ -104,6 +102,7 @@ public:
         this->radius = radius;
         this->thetaDivision = thetaDivision;
         this->phiDivision = phiDivision;
+        model.Pos.y = radius;
     }
 
     Model model = Model();
@@ -117,17 +116,74 @@ public:
         std::vector<WORD> indices2;
         int indiciesNum = (thetaDivision * 2 * 3) + (thetaDivision * (phiDivision - 2) * 6);
         indices2.reserve(indiciesNum);
-        for (int i = 0; i < thetaDivision; i++) {
-            for (int j = 0; j < phiDivision; j++) {
-                ;
+        this->indicesNum = indiciesNum;
+
+        float deltaTheta = 2.0f * PI / thetaDivision;
+        float deltaPhi = PI / phiDivision;
+        
+        // verticies
+        SimpleVertex top, bottom;
+        top.Pos = {0.0f, radius, 0.0f};
+        verticies2.push_back(top);
+        for (int i = 1; i < phiDivision; ++i) {
+            float y = radius * cos(deltaPhi * i);
+            float xzRadius = radius * sin(deltaPhi * i);
+            SimpleVertex a;
+            for (int j = 0; j < thetaDivision; ++j) {
+                a.Pos = { float(xzRadius * cos(j * deltaTheta)), y, float(xzRadius * sin(j * deltaTheta))};
+                verticies2.push_back(a);
             }
         }
+        bottom.Pos = { 0.0f, -radius, 0.0f };
+        verticies2.push_back(bottom);
+
+        // indices
+        for (int j = 0; j < thetaDivision - 1; ++j) {
+            indices2.push_back(0);
+            indices2.push_back(j + 2);
+            indices2.push_back(j + 1);
+        }
+        indices2.push_back(0);
+        indices2.push_back(1);
+        indices2.push_back(thetaDivision);
+
+        for (int i = 0; i < phiDivision - 2; ++i) {
+            int startOfUp = i * thetaDivision + 1;
+            int startOfDown = startOfUp + thetaDivision;
+
+            for (int j = 0; j < thetaDivision - 1; ++j) {
+                indices2.push_back(startOfUp + j);
+                indices2.push_back(startOfUp + j + 1);
+                indices2.push_back(startOfDown + j);
+
+                indices2.push_back(startOfUp + j + 1);
+                indices2.push_back(startOfDown + j + 1);
+                indices2.push_back(startOfDown + j);
+            }
+
+            indices2.push_back(startOfUp + thetaDivision - 1);
+            indices2.push_back(startOfUp);
+            indices2.push_back(startOfDown + thetaDivision - 1);
+
+            indices2.push_back(startOfUp);
+            indices2.push_back(startOfDown);
+            indices2.push_back(startOfDown + thetaDivision - 1);
+        }
+
+        for (int j = 0; j < thetaDivision - 1; ++j) {
+            indices2.push_back(verticiesNum - 1 - thetaDivision + j);
+            indices2.push_back(verticiesNum - 1 - thetaDivision + 1 + j);
+            indices2.push_back(verticiesNum - 1);
+        }
+        indices2.push_back(verticiesNum - 2);
+        indices2.push_back(verticiesNum - 1 - thetaDivision);
+        indices2.push_back(verticiesNum - 1);
 
 
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
         D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
@@ -135,8 +191,8 @@ public:
 
         D3DUtils::CreateVertexBufferWithIndexBuffer(
             device,
-            &mVertexBuffer, sizeof(SimpleVertex) * 24, vertices,
-            &mIndexBuffer, sizeof(WORD) * 36, indices
+            &mVertexBuffer, sizeof(SimpleVertex) * verticiesNum, verticies2.data(),
+            &mIndexBuffer, sizeof(WORD) * indiciesNum, indices2.data()
         );
 
         // Create the constant buffer
@@ -154,7 +210,7 @@ public:
         }
     }
 
-    void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer)
+    void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer, ID3D11RasterizerState* rs, ID3D11RasterizerState* drs)
     {
         WorldContantBuffer wb;
         wb.mWorld = MathUtils::Matrix(
@@ -176,15 +232,19 @@ public:
         // Set index buffer
         context->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
-
         // Set primitive topology
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        context->RSSetState(rs);
+        //context->RSSetState(drs);
 
         context->VSSetShader(mVertexShader, NULL, 0);
         context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
         context->PSSetShader(mPixelShader, NULL, 0);
         context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
-        context->DrawIndexed(36, 0, 0);
+        context->DrawIndexed(indicesNum, 0, 0);
+
+        context->RSSetState(drs);
     }
 };
