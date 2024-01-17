@@ -24,14 +24,14 @@ class GroundSurface
 
     SimpleVertex vertices[8] =
     {
-        { DirectX::XMFLOAT3(-10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(10.0f, -1.0f, -10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-10.0f, -1.0f, 10.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) }
+        { DirectX::XMFLOAT3(-50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(-50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(-50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { DirectX::XMFLOAT3(-50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) }
     };
 
     WORD indices[12] =

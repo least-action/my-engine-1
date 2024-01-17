@@ -55,4 +55,10 @@ namespace MathUtils {
 	void PrintMatrix(const Matrix& m);
 	void PrintVector(const Vector& v);
 
+	struct TextCoord {
+		float x;
+		float y;
+		TextCoord();
+		TextCoord(float x, float y);
+	};
 }

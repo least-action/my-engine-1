@@ -286,6 +286,7 @@ void App::UpdateModels()
 
     // Update cube
     cubeBox.model.Pos = {5.0f * cos(t * 0.5f), 0.0f, 5.0f * sin(t * 0.5f)};
+    sphere.model.RotateRadian = t;
 }
 
 void App::Render()

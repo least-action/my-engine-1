@@ -212,4 +212,7 @@ namespace MathUtils {
 	{
 		printf("%f %f %f\n", v.x, v.y, v.z);
 	}
+
+	TextCoord::TextCoord() : x(0), y(0) {}
+	TextCoord::TextCoord(float x, float y) : x(x), y(y) {}
 }

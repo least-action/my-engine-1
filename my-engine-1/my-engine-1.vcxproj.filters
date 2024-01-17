@@ -76,6 +76,12 @@
     <FxCompile Include="shaderContainerVertex.hlsl">
       <Filter>Source Files</Filter>
     </FxCompile>
+    <FxCompile Include="shaderEarthVertex.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderEarthPixel.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
@@ -85,6 +91,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="woodbox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="earth.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

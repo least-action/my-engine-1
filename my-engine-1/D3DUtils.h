@@ -35,6 +35,7 @@ namespace D3DUtils {
         ID3D11Device* device,
         const char* fileName,
         ID3D11Texture2D** texture,
-        ID3D11ShaderResourceView** resourceView
+        ID3D11ShaderResourceView** resourceView,
+        DXGI_FORMAT format
     );
 }

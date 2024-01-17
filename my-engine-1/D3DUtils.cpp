@@ -164,7 +164,8 @@ namespace D3DUtils {
         ID3D11Device* device,
         const char* fileName,
         ID3D11Texture2D** texture,
-        ID3D11ShaderResourceView** resourceView
+        ID3D11ShaderResourceView** resourceView,
+        DXGI_FORMAT format
     )
     {
         LRESULT hr;
@@ -180,8 +181,7 @@ namespace D3DUtils {
         /*
         * todo: check iamge format
         * https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-resources-textures-how-to
-        */ 
-        DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        */
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;

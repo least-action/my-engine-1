@@ -97,7 +97,7 @@ public:
 
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
-        D3DUtils::CreateTexture(device, "woodbox.png", &mTexture, &mTextureResourceView);
+        D3DUtils::CreateTexture(device, "woodbox.png", &mTexture, &mTextureResourceView, DXGI_FORMAT_R8G8B8A8_UNORM);
         
         /*D3D11_SAMPLER_DESC samplerDesc;
         ZeroMemory(&samplerDesc, sizeof(samplerDesc));

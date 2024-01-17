@@ -17,6 +17,7 @@ class Sphere {
     {
         MathUtils::Point Pos;
         MathUtils::Point Normal;
+        MathUtils::TextCoord TextCoord;
     };
 
     struct WorldContantBuffer
@@ -27,6 +28,8 @@ class Sphere {
     struct Model
     {
         MathUtils::Point Pos;
+        MathUtils::Vector RotateAxis = { 0.0f, 1.0f, 0.0f };
+        float RotateRadian = 0;
     };
 
     ID3D11Buffer* mVertexBuffer = nullptr;
@@ -35,62 +38,12 @@ class Sphere {
     ID3D11VertexShader* mVertexShader = nullptr;
     ID3D11PixelShader* mPixelShader = nullptr;
     ID3D11InputLayout* mInputLayout = nullptr;
-    SimpleVertex vertices[24] =
-    {
-        { { -1.0f, 1.0f, -1.0f }, {0.0f, 1.0f, 0.0f}},
-        { {1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f} },
-        { {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f} },
-        { {-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f} },
-
-        { {-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f} },
-        { {1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f} },
-        { {1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f} },
-        { {-1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f} },
-
-        { {-1.0f, -1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f} },
-        { {-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f} },
-        { {-1.0f, 1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f} },
-        { {-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f} },
-
-        { {1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f} },
-        { {1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f} },
-        { {1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f} },
-        { {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f} },
-
-        { {-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f} },
-        { {1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f} },
-        { {1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f} },
-        { {-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f} },
-
-        { {-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f} },
-        { {1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f} },
-        { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f} },
-        { {-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f} },
-    };
-
-    WORD indices[36] =
-    {
-        3,1,0,
-        2,1,3,
-
-        6,4,5,
-        7,4,6,
-
-        11,9,8,
-        10,9,11,
-
-        14,12,13,
-        15,12,14,
-
-        19,17,16,
-        18,17,19,
-
-        22,20,21,
-        23,20,22
-    };
+    
+    ID3D11Texture2D* mTexture = nullptr;
+    ID3D11ShaderResourceView* mTextureResourceView = nullptr;
 
     int thetaDivision, phiDivision;
-    int indicesNum;
+    int indiciesNum = 0;
 
 public:
     Sphere(float radius, int thetaDivision, int phiDivision)
@@ -109,14 +62,16 @@ public:
 
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
+        D3DUtils::CreateTexture(device, "earth.png", &mTexture, &mTextureResourceView, DXGI_FORMAT_R8G8B8A8_UNORM);
+
         // build verticies and indices
-        std::vector<SimpleVertex> verticies2;
-        int verticiesNum = thetaDivision * (phiDivision - 1) + 2;
-        verticies2.reserve(verticiesNum);
-        std::vector<WORD> indices2;
+        std::vector<SimpleVertex> verticies;
+        int verticiesNum = 2 * thetaDivision + (thetaDivision + 1) * (phiDivision - 1);
+        verticies.reserve(verticiesNum);
+        std::vector<WORD> indicies;
         int indiciesNum = (thetaDivision * 2 * 3) + (thetaDivision * (phiDivision - 2) * 6);
-        indices2.reserve(indiciesNum);
-        this->indicesNum = indiciesNum;
+        indicies.reserve(indiciesNum);
+        this->indiciesNum = indiciesNum;
 
         float deltaTheta = 2.0f * PI / thetaDivision;
         float deltaPhi = PI / phiDivision;
@@ -124,75 +79,72 @@ public:
         // verticies
         SimpleVertex top, bottom;
         top.Pos = {0.0f, radius, 0.0f};
-        verticies2.push_back(top);
+        for (int j = 0; j < thetaDivision; ++j) {
+            top.TextCoord = { 1.0f / (thetaDivision - 1) * j, 0.0f };
+            verticies.push_back(top);
+        }
         for (int i = 1; i < phiDivision; ++i) {
             float y = radius * cos(deltaPhi * i);
             float xzRadius = radius * sin(deltaPhi * i);
             SimpleVertex a;
-            for (int j = 0; j < thetaDivision; ++j) {
+            for (int j = 0; j < thetaDivision + 1; ++j) {
                 a.Pos = { float(xzRadius * cos(j * deltaTheta)), y, float(xzRadius * sin(j * deltaTheta))};
-                verticies2.push_back(a);
+                a.TextCoord = {1.0f / thetaDivision * j, 1.0f / phiDivision * i };
+                verticies.push_back(a);
             }
         }
         bottom.Pos = { 0.0f, -radius, 0.0f };
-        verticies2.push_back(bottom);
+        for (int j = 0; j < thetaDivision; ++j) {
+            bottom.TextCoord = { 1.0f / (thetaDivision - 1) * j, 1.0f };
+            verticies.push_back(bottom);
+        }
 
         // indices
-        for (int j = 0; j < thetaDivision - 1; ++j) {
-            indices2.push_back(0);
-            indices2.push_back(j + 2);
-            indices2.push_back(j + 1);
+        for (int j = 0; j < thetaDivision; ++j) {
+            indicies.push_back(j);
+            indicies.push_back(j + thetaDivision + 1);
+            indicies.push_back(j + thetaDivision);
         }
-        indices2.push_back(0);
-        indices2.push_back(1);
-        indices2.push_back(thetaDivision);
 
         for (int i = 0; i < phiDivision - 2; ++i) {
-            int startOfUp = i * thetaDivision + 1;
-            int startOfDown = startOfUp + thetaDivision;
+            int startOfUp = i * (thetaDivision + 1) + thetaDivision;
+            int startOfDown = startOfUp + thetaDivision + 1;
 
-            for (int j = 0; j < thetaDivision - 1; ++j) {
-                indices2.push_back(startOfUp + j);
-                indices2.push_back(startOfUp + j + 1);
-                indices2.push_back(startOfDown + j);
+            for (int j = 0; j < thetaDivision; ++j) {
+                indicies.push_back(startOfUp + j);
+                indicies.push_back(startOfUp + j + 1);
+                indicies.push_back(startOfDown + j);
 
-                indices2.push_back(startOfUp + j + 1);
-                indices2.push_back(startOfDown + j + 1);
-                indices2.push_back(startOfDown + j);
+                indicies.push_back(startOfUp + j + 1);
+                indicies.push_back(startOfDown + j + 1);
+                indicies.push_back(startOfDown + j);
             }
 
-            indices2.push_back(startOfUp + thetaDivision - 1);
-            indices2.push_back(startOfUp);
-            indices2.push_back(startOfDown + thetaDivision - 1);
-
-            indices2.push_back(startOfUp);
-            indices2.push_back(startOfDown);
-            indices2.push_back(startOfDown + thetaDivision - 1);
         }
 
-        for (int j = 0; j < thetaDivision - 1; ++j) {
-            indices2.push_back(verticiesNum - 1 - thetaDivision + j);
-            indices2.push_back(verticiesNum - 1 - thetaDivision + 1 + j);
-            indices2.push_back(verticiesNum - 1);
+        int startOfUp = verticiesNum - 1 - (thetaDivision - 1) - (thetaDivision + 1);
+        for (int j = 0; j < thetaDivision; ++j) {
+            indicies.push_back(startOfUp + j);
+            indicies.push_back(startOfUp + 1 + j);
+            indicies.push_back(startOfUp + j + thetaDivision + 1);
         }
-        indices2.push_back(verticiesNum - 2);
-        indices2.push_back(verticiesNum - 1 - thetaDivision);
-        indices2.push_back(verticiesNum - 1);
+        
 
 
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
-        D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
-        D3DUtils::CreatePixelShader(device, L"pixelShader.hlsl", &mPixelShader);
+        D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderEarthVertex.hlsl", &mVertexShader, layout, &mInputLayout);
+        D3DUtils::CreatePixelShader(device, L"shaderEarthPixel.hlsl", &mPixelShader);
 
         D3DUtils::CreateVertexBufferWithIndexBuffer(
             device,
-            &mVertexBuffer, sizeof(SimpleVertex) * verticiesNum, verticies2.data(),
-            &mIndexBuffer, sizeof(WORD) * indiciesNum, indices2.data()
+            &mVertexBuffer, sizeof(SimpleVertex) * verticiesNum, verticies.data(),
+            &mIndexBuffer, sizeof(WORD) * indiciesNum, indicies.data()
         );
 
         // Create the constant buffer
@@ -213,14 +165,16 @@ public:
     void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer, ID3D11RasterizerState* rs, ID3D11RasterizerState* drs)
     {
         WorldContantBuffer wb;
-        wb.mWorld = MathUtils::Matrix(
+        auto transition = MathUtils::Matrix(
             {
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 model.Pos.x, model.Pos.y, model.Pos.z, 1.0f,
             }
-        ).Transposed();
+        );
+        auto rotation = MathUtils::BuildRotation(model.RotateAxis, model.RotateRadian);
+        wb.mWorld = (transition * rotation).Transposed();
         context->UpdateSubresource(worldContantBuffer, 0, NULL, &wb, 0, 0);
 
         context->IASetInputLayout(mInputLayout);
@@ -235,16 +189,17 @@ public:
         // Set primitive topology
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        context->RSSetState(rs);
-        //context->RSSetState(drs);
+        //context->RSSetState(rs);
+        context->RSSetState(drs);
 
         context->VSSetShader(mVertexShader, NULL, 0);
         context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
         context->PSSetShader(mPixelShader, NULL, 0);
         context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
-        context->DrawIndexed(indicesNum, 0, 0);
+        context->PSSetShaderResources(0, 1, &mTextureResourceView);
+        context->DrawIndexed(indiciesNum, 0, 0);
 
-        context->RSSetState(drs);
+        //context->RSSetState(drs);
     }
 };
