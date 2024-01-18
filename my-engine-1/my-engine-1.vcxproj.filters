@@ -61,12 +61,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="vertexShader.hlsl">
-      <Filter>Source Files</Filter>
-    </FxCompile>
-    <FxCompile Include="pixelShader.hlsl">
-      <Filter>Source Files</Filter>
-    </FxCompile>
     <FxCompile Include="shaderContainerPixel.hlsl">
       <Filter>Source Files</Filter>
     </FxCompile>
@@ -80,6 +74,9 @@
       <Filter>Source Files</Filter>
     </FxCompile>
     <FxCompile Include="shaderEarthPixel.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderGroundVertex.hlsl">
       <Filter>Source Files</Filter>
     </FxCompile>
   </ItemGroup>

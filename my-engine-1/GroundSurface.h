@@ -8,6 +8,7 @@ class GroundSurface
     {
         DirectX::XMFLOAT3 Pos;
         DirectX::XMFLOAT3 Normal;
+        MathUtils::TextCoord TextCoord;
     };
 
     struct WorldContantBuffer
@@ -24,14 +25,14 @@ class GroundSurface
 
     SimpleVertex vertices[8] =
     {
-        { DirectX::XMFLOAT3(-50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(50.0f, -1.0f, -50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
-        { DirectX::XMFLOAT3(-50.0f, -1.0f, 50.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) }
+        { {-50.0f, -1.0f, -50.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
+        { {50.0f, -1.0f, -50.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
+        { {50.0f, -1.0f, 50.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
+        { {-50.0f, -1.0f, 50.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
+        { {-50.0f, -1.0f, -50.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
+        { {50.0f, -1.0f, -50.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
+        { {50.0f, -1.0f, 50.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} },
+        { {-50.0f, -1.0f, 50.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} }
     };
 
     WORD indices[12] =
@@ -50,8 +51,9 @@ public:
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
-        D3DUtils::CreateVertexShaderWithInputLayout(device, L"vertexShader.hlsl", &mVertexShader, layout, &mInputLayout);
+        D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderGroundVertex.hlsl", &mVertexShader, layout, &mInputLayout);
         D3DUtils::CreatePixelShader(device, L"shaderGroundPixel.hlsl", &mPixelShader);
 
         D3DUtils::CreateVertexBufferWithIndexBuffer(

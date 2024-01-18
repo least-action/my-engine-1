@@ -128,7 +128,6 @@ public:
             indicies.push_back(startOfUp + 1 + j);
             indicies.push_back(startOfUp + j + thetaDivision + 1);
         }
-        
 
 
         // Define the input layout
