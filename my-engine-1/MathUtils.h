@@ -3,6 +3,8 @@
 #include <directxmath.h>
 
 namespace MathUtils {
+	const float PI = 3.14159265358979323846;
+
 	void PrintXMMATRIX(DirectX::XMMATRIX m);
 	void PrintFloat3(DirectX::XMFLOAT3 f);
 

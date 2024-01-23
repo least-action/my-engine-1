@@ -56,6 +56,7 @@ class App {
 	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 	ID3D11Buffer* mConstantBuffer = nullptr;
 	ID3D11RasterizerState* mDefaultRasterizer = nullptr;
+	ID3D11RasterizerState* mNoneRasterizer = nullptr;
 	ID3D11RasterizerState* mWireRasterizer = nullptr;
 
 	MathUtils::Matrix mView;

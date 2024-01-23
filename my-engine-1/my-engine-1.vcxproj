@@ -204,8 +204,6 @@
   <ItemGroup>
     <Image Include="back.png" />
     <Image Include="bottom.png" />
-    <Image Include="container.jpg" />
-    <Image Include="earth.jpg" />
     <Image Include="earth.png" />
     <Image Include="front.png" />
     <Image Include="left.png" />

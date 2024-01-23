@@ -90,16 +90,19 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="earth.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="woodbox.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="earth.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="left.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="right.png">
@@ -108,16 +111,7 @@
     <Image Include="top.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="back.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="bottom.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="front.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="left.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
