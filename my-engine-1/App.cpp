@@ -100,7 +100,7 @@ HRESULT App::InitD3D()
 
     ZeroMemory(&rasterDesc, sizeof(rasterDesc));
     rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
-    rasterDesc.CullMode = D3D11_CULL_BACK;
+    rasterDesc.CullMode = D3D11_CULL_NONE;
     rasterDesc.DepthClipEnable = true;
     mDevice->CreateRasterizerState(&rasterDesc, &mWireRasterizer);
 
@@ -153,6 +153,7 @@ HRESULT App::InitD3D()
     surface.Initialize(mDevice, mContext);
     cubeBox.Initialize(mDevice, mContext);
     sphere.Initialize(mDevice, mContext);
+    cubeMap.Initialize(mDevice, mContext);
     
     // Create the constant buffer
     D3D11_BUFFER_DESC bd;
@@ -171,7 +172,7 @@ HRESULT App::InitD3D()
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look));
     
     // Initialize the projection matrix
-    mProjection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.f);
+    mProjection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.1f);
 
 	return S_OK;
 }
@@ -283,6 +284,7 @@ void App::UpdateModels()
     mCamera.Pos = mCamera.Pos + (movingDir * (dt * mSpeed));
 
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
+    mViewOnlyRotation = MathUtils::MatrixLookAtLH({ 0.0f, 0.0f, 0.0f }, changedLook, changedUp, changedUp.Cross(changedLook));
 
     // Update cube
     cubeBox.model.Pos = {5.0f * cos(t * 0.5f), 0.0f, 5.0f * sin(t * 0.5f)};
@@ -342,6 +344,8 @@ void App::Render()
     surface.Render(mContext, mConstantBuffer);
     cubeBox.Render(mContext, mConstantBuffer);
     sphere.Render(mContext, mConstantBuffer, mWireRasterizer, mDefaultRasterizer);
+    //cubeMap.Render(mContext, mViewOnlyRotation, mProjection, mConstantBuffer);
+    cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer, mWireRasterizer, mDefaultRasterizer);
 
     //
     // Present our back buffer to our front buffer

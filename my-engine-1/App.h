@@ -3,6 +3,7 @@
 #include "CubeBox.h"
 #include "Sphere.h"
 #include "GroundSurface.h"
+#include "CubeMap.h"
 #include "MathUtils.h"
 #include <windows.h>
 #include <directxmath.h>
@@ -58,6 +59,7 @@ class App {
 	ID3D11RasterizerState* mWireRasterizer = nullptr;
 
 	MathUtils::Matrix mView;
+	MathUtils::Matrix mViewOnlyRotation;
 	MathUtils::Matrix mProjection;
 	MathUtils::Point mBlackholePos = {0.0f, 0.0f, -10.0f};
 
@@ -66,6 +68,7 @@ class App {
 	CubeBox cubeBox;
 	GroundSurface surface;
 	Sphere sphere{ 5.0f, 10, 10 };
+	CubeMap cubeMap{ 100.0f, 10, 10 };
 		
 public:
 	App() : mMainWindow(new MainWindow()) {};

@@ -90,8 +90,11 @@ namespace D3DUtils {
         hr = device->CreateInputLayout(layout.data(), UINT(layout.size()), pVSBlob->GetBufferPointer(),
             pVSBlob->GetBufferSize(), inputLayout);
         pVSBlob->Release();
-        if (FAILED(hr))
+        if (FAILED(hr)) {
+            std::wcout << fileName << std::endl;
+            printf("CreateInputLayout error : %08X\n", hr);
             throw std::runtime_error("");
+        }
     }
 
     void CreatePixelShader(

@@ -110,6 +110,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderModel>4.0_level_9_3</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -139,6 +142,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="ComInitializer.h" />
     <ClInclude Include="CubeBox.h" />
+    <ClInclude Include="CubeMap.h" />
     <ClInclude Include="D3DUtils.h" />
     <ClInclude Include="GroundSurface.h" />
     <ClInclude Include="MainWindow.h" />
@@ -154,6 +158,19 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="shaderContainerVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shaderCubeMapPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shaderCubeMapVertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -185,9 +202,15 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="back.png" />
+    <Image Include="bottom.png" />
     <Image Include="container.jpg" />
     <Image Include="earth.jpg" />
     <Image Include="earth.png" />
+    <Image Include="front.png" />
+    <Image Include="left.png" />
+    <Image Include="right.png" />
+    <Image Include="top.png" />
     <Image Include="woodbox.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
