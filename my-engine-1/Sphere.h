@@ -9,8 +9,6 @@
 #include <stdexcept>
 #include <stdio.h>
 
-const float PI = 3.14159265358979323846;
-
 class Sphere {
     float radius;
     struct SimpleVertex
@@ -73,8 +71,8 @@ public:
         indicies.reserve(indiciesNum);
         this->indiciesNum = indiciesNum;
 
-        float deltaTheta = 2.0f * PI / thetaDivision;
-        float deltaPhi = PI / phiDivision;
+        float deltaTheta = 2.0f * MathUtils::PI / thetaDivision;
+        float deltaPhi = MathUtils::PI / phiDivision;
         
         // verticies
         SimpleVertex top, bottom;
