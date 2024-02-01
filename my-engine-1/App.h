@@ -69,7 +69,7 @@ class App {
 	Sphere sphere{ 5.0f, 10, 10 };
 	CubeMap cubeMap{ 100.0f, 10, 10 };
 	
-	Light mPointLight1{ { -15.0f, 10.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 200.0f, 0 };
+	Light mPointLight1{ { -10.0f, 15.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 200.0f, 0 };
 	Light mPointLight2{ { 15.0f, 3.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 30.0f, 0 };
 
 public:

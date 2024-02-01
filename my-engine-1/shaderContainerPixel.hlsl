@@ -21,13 +21,22 @@ cbuffer ConstantBuffer : register(b0)
 struct PS_INPUT
 {
     float4 Pos : SV_POSITION;
-    float3 Norm : TEXCOORD0;
-    float4 Color : COLOR;
+    float4 PosWorld : POSITION0;
+    float4 Norm : TEXCOORD0;
     float2 Textcoord : TEXCOORD1;
 };
 
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    return _texture.Sample(MeshTextureSampler, input.Textcoord);
+    float3 color = _texture.Sample(MeshTextureSampler, input.Textcoord);
+    float4 finalColor;
+    float distance1 = length(input.PosWorld - Light1.Pos);
+    float distance2 = length(input.PosWorld - Light2.Pos);
+    float receiveLight = Light1.Intensity / (distance1 * distance1) * dot(input.Norm, normalize(Light1.Pos - input.PosWorld)) +
+        Light2.Intensity / (distance2 * distance2) * dot(input.Norm, normalize(Light2.Pos - input.PosWorld));
+    finalColor.rgb = color * max(receiveLight, 0.2f);
+    finalColor.a = 1;
+    
+    return finalColor;
 }

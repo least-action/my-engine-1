@@ -31,6 +31,7 @@ namespace MathUtils {
 	class Vector {
 	public:
 		float x, y, z, w = 0.0f;
+		Vector();
 		Vector(float x, float y, float z);
 		Vector Cross(const Vector& a);
 		float Dot(const Vector& a);
@@ -39,6 +40,7 @@ namespace MathUtils {
 		Vector operator-(const Vector& v);
 		Vector operator+(const Vector& v);
 		float length();
+		Vector Normalized();
 	};
 
 	class Point {
@@ -47,6 +49,7 @@ namespace MathUtils {
 		Point();
 		Point(float x, float y, float z);
 		Point operator+(const Vector& v);
+		Vector operator-(const Point& v);
 	};
 
 	Matrix MatrixLookAtLH(Point pos, Vector look, Vector up, Vector right);

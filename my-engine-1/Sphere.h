@@ -14,7 +14,7 @@ class Sphere {
     struct SimpleVertex
     {
         MathUtils::Point Pos;
-        MathUtils::Point Normal;
+        MathUtils::Vector Normal;
         MathUtils::TextCoord TextCoord;
     };
 
@@ -77,6 +77,7 @@ public:
         // verticies
         SimpleVertex top, bottom;
         top.Pos = {0.0f, radius, 0.0f};
+        top.Normal = {0.0f, 1.0f, 0.0f};
         for (int j = 0; j < thetaDivision; ++j) {
             top.TextCoord = { 1.0f / (thetaDivision - 1) * j, 0.0f };
             verticies.push_back(top);
@@ -87,11 +88,13 @@ public:
             SimpleVertex a;
             for (int j = 0; j < thetaDivision + 1; ++j) {
                 a.Pos = { float(xzRadius * cos(j * deltaTheta)), y, float(xzRadius * sin(j * deltaTheta))};
+                a.Normal = (a.Pos - MathUtils::Point{0.0f, 0.0f, 0.0f}).Normalized();
                 a.TextCoord = {1.0f / thetaDivision * j, 1.0f / phiDivision * i };
                 verticies.push_back(a);
             }
         }
         bottom.Pos = { 0.0f, -radius, 0.0f };
+        bottom.Normal = { 0.0f, -1.0f, 0.0f };
         for (int j = 0; j < thetaDivision; ++j) {
             bottom.TextCoord = { 1.0f / (thetaDivision - 1) * j, 1.0f };
             verticies.push_back(bottom);

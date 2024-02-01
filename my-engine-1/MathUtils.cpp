@@ -25,6 +25,7 @@ namespace MathUtils {
 
 	Point::Point(float x, float y, float z) : x(x), y(y), z(z) {}
 
+	Vector::Vector() : x(0.0f), y(0.0f), z(0.0f) {}
 	Vector::Vector(float x, float y, float z) : x(x), y(y), z(z) {}
 
 	Vector Vector::Cross(const Vector &a)
@@ -68,6 +69,13 @@ namespace MathUtils {
 	float Vector::length()
 	{
 		return sqrt(x * x + y * y + z * z);
+	}
+
+	Vector Vector::Normalized()
+	{
+		float size = pow(x * x + y * y + z * z, 0.5);
+
+		return { x / size, y / size, z / size };
 	}
 
 	Matrix::Matrix() {}
@@ -131,6 +139,11 @@ namespace MathUtils {
 	Point Point::operator+(const Vector& v)
 	{
 		return {x + v.x, y + v.y, z + v.z};
+	}
+
+	Vector Point::operator-(const Point& o)
+	{
+		return { x - o.x, y - o.y, z - o.z };
 	}
 
 	Matrix MatrixLookAtLH(MathUtils::Point pos, MathUtils::Vector look, MathUtils::Vector up, MathUtils::Vector right)

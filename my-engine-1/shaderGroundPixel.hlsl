@@ -33,10 +33,9 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 finalColor;
     float distance1 = length(input.PosWorld - Light1.Pos);
     float distance2 = length(input.PosWorld - Light2.Pos);
-    finalColor.rgb = materialColor * (
-        Light1.Intensity / (distance1 * distance1) * dot(input.Norm, normalize(Light1.Pos - input.PosWorld)) +
-        Light2.Intensity / (distance2 * distance2) * dot(input.Norm, normalize(Light2.Pos - input.PosWorld))
-);
+    float receiveLight = Light1.Intensity / (distance1 * distance1) * dot(input.Norm, normalize(Light1.Pos - input.PosWorld)) +
+        Light2.Intensity / (distance2 * distance2) * dot(input.Norm, normalize(Light2.Pos - input.PosWorld));
+    finalColor.rgb = materialColor * max(receiveLight, 0.2f);
     finalColor.a = 1;
     
     

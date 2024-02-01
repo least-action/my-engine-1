@@ -1,5 +1,6 @@
 #pragma once
 #include "D3DUtils.h"
+#include "MathUtils.h"
 
 #include <d3d11.h>
 #include <directxmath.h>
@@ -13,9 +14,9 @@
 class CubeBox {
 	struct SimpleVertex
 	{
-		DirectX::XMFLOAT3 Pos;
-		DirectX::XMFLOAT3 Normal;
-        DirectX::XMFLOAT2 TexCoord;
+		MathUtils::Point Pos;
+		MathUtils::Vector Normal;
+        MathUtils::TextCoord TexCoord;
 	};
 
     struct WorldContantBuffer
@@ -102,9 +103,9 @@ public:
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
         D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderContainerVertex.hlsl", &mVertexShader, layout, &mInputLayout);
         D3DUtils::CreatePixelShader(device, L"shaderContainerPixel.hlsl", &mPixelShader);

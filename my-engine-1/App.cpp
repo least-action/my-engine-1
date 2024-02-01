@@ -293,30 +293,13 @@ void App::UpdateModels()
 
     // Update cube
     cubeBox.model.Pos = {5.0f * cos(t * 0.5f), 0.0f, 5.0f * sin(t * 0.5f)};
+    mPointLight2.Pos = { 10.0f * cos(t), 3.0f, 10.0f * -sin(t) };
     sphere.model.RotateRadian = -t;
 }
 
 void App::Render()
 {
     UpdateModels();
-
-    // Setup our lighting parameters
-    DirectX::XMFLOAT4 vLightDirs[2] =
-    {
-        DirectX::XMFLOAT4(-0.577f, 0.577f, -0.577f, 1.0f),
-        DirectX::XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f),
-    };
-    DirectX::XMFLOAT4 vLightColors[2] =
-    {
-        DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),
-        DirectX::XMFLOAT4(0.5f, 0.0f, 0.0f, 1.0f)
-    };
-
-    // Rotate the second light around the origin
-    DirectX::XMMATRIX mRotate = DirectX::XMMatrixRotationY(-2.0f * 10);
-    DirectX::XMVECTOR vLightDir = DirectX::XMLoadFloat4(&vLightDirs[1]);
-    vLightDir = DirectX::XMVector3Transform(vLightDir, mRotate);
-    DirectX::XMStoreFloat4(&vLightDirs[1], vLightDir);
 
     //
     // Clear the back buffer
@@ -345,7 +328,6 @@ void App::Render()
     surface.Render(mContext, mConstantBuffer);
     cubeBox.Render(mContext, mConstantBuffer);
     sphere.Render(mContext, mConstantBuffer, mWireRasterizer, mDefaultRasterizer);
-    //cubeMap.Render(mContext, mViewOnlyRotation, mProjection, mConstantBuffer);
     cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer, mNoneRasterizer, mDefaultRasterizer);
 
     //
