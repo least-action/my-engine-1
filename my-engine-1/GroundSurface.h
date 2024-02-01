@@ -6,14 +6,14 @@ class GroundSurface
 {
     struct SimpleVertex
     {
-        DirectX::XMFLOAT3 Pos;
-        DirectX::XMFLOAT3 Normal;
+        MathUtils::Point Pos;
+        MathUtils::Vector Normal;
         MathUtils::TextCoord TextCoord;
     };
 
     struct WorldContantBuffer
     {
-        DirectX::XMMATRIX mWorld;
+        DirectX::XMMATRIX World;
     };
 
     ID3D11Buffer* mVertexBuffer = nullptr;
@@ -49,9 +49,9 @@ public:
         // Define the input layout
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
         {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
         D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderGroundVertex.hlsl", &mVertexShader, layout, &mInputLayout);
         D3DUtils::CreatePixelShader(device, L"shaderGroundPixel.hlsl", &mPixelShader);
@@ -80,7 +80,7 @@ public:
 	void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer)
 	{
         WorldContantBuffer wb;
-        wb.mWorld = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0));
+        wb.World = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0));
         context->UpdateSubresource(worldContantBuffer, 0, NULL, &wb, 0, 0);
         
         context->IASetInputLayout(mInputLayout);

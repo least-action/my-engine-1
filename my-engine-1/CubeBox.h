@@ -20,7 +20,7 @@ class CubeBox {
 
     struct WorldContantBuffer
     {
-        DirectX::XMMATRIX mWorld;
+        DirectX::XMMATRIX World;
     };
     
     struct Model
@@ -133,7 +133,7 @@ public:
     void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer)
     {
         WorldContantBuffer wb;
-        wb.mWorld = DirectX::XMMatrixTranspose(
+        wb.World = DirectX::XMMatrixTranspose(
             {
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,

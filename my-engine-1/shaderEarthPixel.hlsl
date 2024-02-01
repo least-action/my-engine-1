@@ -1,3 +1,5 @@
+#include "Common.hlsli"
+
 Texture2D _texture : register(t0);
 //SamplerState _sampler : register(s0);
 
@@ -12,10 +14,8 @@ cbuffer ConstantBuffer : register(b0)
 {
     matrix View;
     matrix Projection;
-    float4 vLightDir[2];
-    float4 vLightColor[2];
-    float4 vOutputColor;
-    float4 blackholePos;
+    Light Light1;
+    Light Light2;
 }
 
 struct PS_INPUT

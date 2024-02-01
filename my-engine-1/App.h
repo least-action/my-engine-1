@@ -5,6 +5,7 @@
 #include "GroundSurface.h"
 #include "CubeMap.h"
 #include "MathUtils.h"
+#include "Light.h"
 #include <windows.h>
 #include <directxmath.h>
 
@@ -14,17 +15,15 @@
 class App {
 	struct ConstantBuffer
 	{
-		MathUtils::Matrix mView;
-		MathUtils::Matrix mProjection;
-		DirectX::XMFLOAT4 vLightDir[2];
-		DirectX::XMFLOAT4 vLightColor[2];
-		DirectX::XMFLOAT4 vOutputColor;
-		MathUtils::Point mBlackholePos;
+		MathUtils::Matrix View;
+		MathUtils::Matrix Projection;
+		Light Light1;
+		Light Light2;
 	};
 
 	struct WorldContantBuffer
 	{
-		MathUtils::Matrix mWorld;
+		MathUtils::Matrix World;
 	};
 
 	struct Camera
@@ -34,9 +33,9 @@ class App {
 		MathUtils::Vector Up;
 	};
 	Camera mCamera = {
-		{0.0f, 1.6f, -20.0f},
-		{0.0f, 0.0f, 1.0f},
-		{0.0f, 1.0f, 0.0f}
+		{0.0f, 15.0f, -26.0f},
+		{0.0f, -0.374015f, 0.927423f},
+		{0.0f, 0.927423f, 0.374015f}
 	};
 
 	HRESULT InitWindow();
@@ -59,10 +58,9 @@ class App {
 	ID3D11RasterizerState* mNoneRasterizer = nullptr;
 	ID3D11RasterizerState* mWireRasterizer = nullptr;
 
-	MathUtils::Matrix mView;
+	MathUtils::Matrix View;
 	MathUtils::Matrix mViewOnlyRotation;
-	MathUtils::Matrix mProjection;
-	MathUtils::Point mBlackholePos = {0.0f, 0.0f, -10.0f};
+	MathUtils::Matrix Projection;
 
 	float mSpeed = 10.0f;
 
@@ -70,7 +68,10 @@ class App {
 	GroundSurface surface;
 	Sphere sphere{ 5.0f, 10, 10 };
 	CubeMap cubeMap{ 100.0f, 10, 10 };
-		
+	
+	Light mPointLight1{ { -15.0f, 10.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 200.0f, 0 };
+	Light mPointLight2{ { 15.0f, 3.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 30.0f, 0 };
+
 public:
 	App() : mMainWindow(new MainWindow()) {};
 

@@ -1,7 +1,11 @@
+#include "Common.hlsli"
+
 cbuffer ConstantBuffer : register(b0)
 {
     matrix _;
     matrix Projection;
+    Light Light1;
+    Light Light2;
 }
 
 cbuffer ViewBuffer : register(b1)
