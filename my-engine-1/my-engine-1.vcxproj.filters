@@ -82,9 +82,6 @@
     <FxCompile Include="shaderGroundPixel.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaderGroundVertex.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="shaderDepthOnlyVertex.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -95,6 +92,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="shaderDefaultPixel.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderDefaultWirePixel.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

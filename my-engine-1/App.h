@@ -59,11 +59,12 @@ class App {
 	ID3D11Buffer* mConstantBuffer = nullptr;
 	ID3D11RasterizerState* mDefaultRasterizer = nullptr;
 	ID3D11RasterizerState* mNoneRasterizer = nullptr;
-	ID3D11RasterizerState* mWireRasterizer = nullptr;
+
 
 	ID3D11Texture2D* mDepthOnlyTexture = nullptr;
 	ID3D11DepthStencilView* mDepthOnlyView = nullptr;
     ID3D11ShaderResourceView* mDepthOnlySRV = nullptr;
+
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> mSolidILDesc =
 	{
@@ -75,10 +76,16 @@ class App {
 	ID3D11PixelShader* mSolidPS = nullptr;
 	ID3D11InputLayout* mSolidIL = nullptr;
 	ID3D11RasterizerState* mSolidRS = nullptr;
-	
 	PipelineStateObject mSolidPSO;
+
+
+	ID3D11PixelShader* mWirePS = nullptr;
+	ID3D11RasterizerState* mWireRS = nullptr;
 	PipelineStateObject mWirePSO;
+
+	ID3D11PixelShader* mGroundPS = nullptr;
 	PipelineStateObject mGroundPSO;
+
 	PipelineStateObject mCubeMapPSO;
 	PipelineStateObject mDepthOnlyPSO;
 

@@ -46,16 +46,6 @@ class GroundSurface
 public:
     void Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     {
-        // Define the input layout
-        std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
-        {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-        };
-        D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderGroundVertex.hlsl", &mVertexShader, layout, &mInputLayout);
-        D3DUtils::CreatePixelShader(device, L"shaderGroundPixel.hlsl", &mPixelShader);
-
         D3DUtils::CreateVertexBufferWithIndexBuffer(
             device,
             &mVertexBuffer, sizeof(SimpleVertex) * 8, vertices,
@@ -83,8 +73,6 @@ public:
         wb.World = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0));
         context->UpdateSubresource(worldContantBuffer, 0, NULL, &wb, 0, 0);
         
-        context->IASetInputLayout(mInputLayout);
-        
         UINT stride = sizeof(SimpleVertex);
         UINT offset = 0;
         context->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
@@ -96,10 +84,8 @@ public:
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
        
 
-        context->VSSetShader(mVertexShader, NULL, 0);
         context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
-        context->PSSetShader(mPixelShader, NULL, 0);
         context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->DrawIndexed(12, 0, 0);
 	}

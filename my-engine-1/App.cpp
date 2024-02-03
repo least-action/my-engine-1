@@ -99,12 +99,6 @@ HRESULT App::InitD3D()
     mDevice->CreateRasterizerState(&rasterDesc, &mDefaultRasterizer);
 
     ZeroMemory(&rasterDesc, sizeof(rasterDesc));
-    rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
-    rasterDesc.CullMode = D3D11_CULL_NONE;
-    rasterDesc.DepthClipEnable = true;
-    mDevice->CreateRasterizerState(&rasterDesc, &mWireRasterizer);
-
-    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
     rasterDesc.FillMode = D3D11_FILL_SOLID;
     rasterDesc.CullMode = D3D11_CULL_NONE;
     rasterDesc.DepthClipEnable = false;
@@ -202,22 +196,51 @@ HRESULT App::InitD3D()
         return hr;
     }
 
-    // Define the input layout
-    D3DUtils::CreateVertexShaderWithInputLayout(mDevice, L"shaderDefaultVertex.hlsl", &mSolidVS, mSolidILDesc, &mSolidIL);
-    D3DUtils::CreatePixelShader(mDevice, L"shaderDefaultPixel.hlsl", &mSolidPS);
-    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
-    rasterDesc.FillMode = D3D11_FILL_SOLID;
-    rasterDesc.CullMode = D3D11_CULL_BACK;
-    rasterDesc.DepthClipEnable = true;
-    mDevice->CreateRasterizerState(&rasterDesc, &mSolidRS);
+    // Solid PSO
+    {
+        D3DUtils::CreateVertexShaderWithInputLayout(mDevice, L"shaderDefaultVertex.hlsl", &mSolidVS, mSolidILDesc, &mSolidIL);
+        D3DUtils::CreatePixelShader(mDevice, L"shaderDefaultPixel.hlsl", &mSolidPS);
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID;
+        rasterDesc.CullMode = D3D11_CULL_BACK;
+        rasterDesc.DepthClipEnable = true;
+        mDevice->CreateRasterizerState(&rasterDesc, &mSolidRS);
 
-    mSolidPSO.IL = mSolidIL;
-    mSolidPSO.VS = mSolidVS;
-    mSolidPSO.PS = mSolidPS;
-    mSolidPSO.RS = mSolidRS;
-    mSolidPSO.RTV = mRenderTargetView;
-    mSolidPSO.DSV = mDepthStencilView;
+        mSolidPSO.IL = mSolidIL;
+        mSolidPSO.VS = mSolidVS;
+        mSolidPSO.PS = mSolidPS;
+        mSolidPSO.RS = mSolidRS;
+        mSolidPSO.RTV = mRenderTargetView;
+        mSolidPSO.DSV = mDepthStencilView;
+    }
+    
+    // Wire PSO
+    {
+        D3DUtils::CreatePixelShader(mDevice, L"shaderDefaultWirePixel.hlsl", &mWirePS);
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+        rasterDesc.CullMode = D3D11_CULL_NONE;
+        rasterDesc.DepthClipEnable = true;
+        mDevice->CreateRasterizerState(&rasterDesc, &mWireRS);
+        mWirePSO.IL = mSolidIL;
+        mWirePSO.VS = mSolidVS;
+        mWirePSO.PS = mWirePS;
+        mWirePSO.RS = mWireRS;
+        mWirePSO.RTV = mRenderTargetView;
+        mWirePSO.DSV = mDepthStencilView;
+    }
 
+    // Ground PSO
+    {
+        D3DUtils::CreatePixelShader(mDevice, L"shaderGroundPixel.hlsl", &mGroundPS);
+        mGroundPSO.IL = mSolidIL;
+        mGroundPSO.VS = mSolidVS;
+        mGroundPSO.PS = mGroundPS;
+        mGroundPSO.RS = mSolidRS;
+        mGroundPSO.RTV = mRenderTargetView;
+        mGroundPSO.DSV = mDepthStencilView;
+    }
+    
 
     // Initialize the projection matrix
     Projection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.1f);
@@ -353,7 +376,6 @@ void App::Render()
 {
     UpdateModels();
 
-
     //
     // Clear the back buffer
     //
@@ -387,11 +409,14 @@ void App::Render()
     //
     
     SetPSO(mSolidPSO);
+    SetPSO(mWirePSO);
     cubeBox.Render(mContext, mConstantBuffer);
     sphere.Render(mContext, mConstantBuffer);
 
-    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+    SetPSO(mGroundPSO);
     surface.Render(mContext, mConstantBuffer);
+    
+    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
     cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer, mNoneRasterizer, mDefaultRasterizer);
 
     //
