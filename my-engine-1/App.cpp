@@ -90,19 +90,6 @@ HRESULT App::InitD3D()
         printf("CreateRenderTargetView error : %08X\n", hr);
         return hr;
     }
-
-    D3D11_RASTERIZER_DESC rasterDesc;
-    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
-    rasterDesc.FillMode = D3D11_FILL_SOLID;
-    rasterDesc.CullMode = D3D11_CULL_BACK;
-    rasterDesc.DepthClipEnable = true;
-    mDevice->CreateRasterizerState(&rasterDesc, &mDefaultRasterizer);
-
-    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
-    rasterDesc.FillMode = D3D11_FILL_SOLID;
-    rasterDesc.CullMode = D3D11_CULL_NONE;
-    rasterDesc.DepthClipEnable = false;
-    mDevice->CreateRasterizerState(&rasterDesc, &mNoneRasterizer);
     
     // Create depth stencil texture
     D3D11_TEXTURE2D_DESC descDepth;
@@ -166,7 +153,7 @@ HRESULT App::InitD3D()
         return hr;
     }
 
-    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+    //mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
     
     // Setup the viewport
     D3D11_VIEWPORT vp;
@@ -196,14 +183,16 @@ HRESULT App::InitD3D()
         return hr;
     }
 
+    D3D11_RASTERIZER_DESC rasterDesc;
+
     // Solid PSO
     {
         D3DUtils::CreateVertexShaderWithInputLayout(mDevice, L"shaderDefaultVertex.hlsl", &mSolidVS, mSolidILDesc, &mSolidIL);
         D3DUtils::CreatePixelShader(mDevice, L"shaderDefaultPixel.hlsl", &mSolidPS);
         ZeroMemory(&rasterDesc, sizeof(rasterDesc));
         rasterDesc.FillMode = D3D11_FILL_SOLID;
-        rasterDesc.CullMode = D3D11_CULL_BACK;
-        rasterDesc.DepthClipEnable = true;
+        rasterDesc.CullMode = D3D11_CULL_NONE;
+        rasterDesc.DepthClipEnable = false;
         mDevice->CreateRasterizerState(&rasterDesc, &mSolidRS);
 
         mSolidPSO.IL = mSolidIL;
@@ -239,6 +228,28 @@ HRESULT App::InitD3D()
         mGroundPSO.RS = mSolidRS;
         mGroundPSO.RTV = mRenderTargetView;
         mGroundPSO.DSV = mDepthStencilView;
+    }
+
+    // CubeMap PSO
+    {
+        std::vector<D3D11_INPUT_ELEMENT_DESC> cubeMaplayout =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+        D3DUtils::CreateVertexShaderWithInputLayout(mDevice, L"shaderCubeMapVertex.hlsl", &mCubeMapVS, cubeMaplayout, &mCubeMapIL);
+        D3DUtils::CreatePixelShader(mDevice, L"shaderCubeMapPixel.hlsl", &mCubeMapPS);
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID;
+        rasterDesc.CullMode = D3D11_CULL_NONE;
+        rasterDesc.DepthClipEnable = false;
+        mDevice->CreateRasterizerState(&rasterDesc, &mCubeMapRS);
+
+        mCubeMapPSO.IL = mCubeMapIL;
+        mCubeMapPSO.VS = mCubeMapVS;
+        mCubeMapPSO.PS = mCubeMapPS;
+        mCubeMapPSO.RS = mCubeMapRS;
+        mCubeMapPSO.RTV = mRenderTargetView;
+        mCubeMapPSO.DSV = mDepthStencilView;
     }
     
 
@@ -409,15 +420,15 @@ void App::Render()
     //
     
     SetPSO(mSolidPSO);
-    SetPSO(mWirePSO);
+    //SetPSO(mWirePSO);
     cubeBox.Render(mContext, mConstantBuffer);
     sphere.Render(mContext, mConstantBuffer);
 
     SetPSO(mGroundPSO);
     surface.Render(mContext, mConstantBuffer);
     
-    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
-    cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer, mNoneRasterizer, mDefaultRasterizer);
+    SetPSO(mCubeMapPSO);
+    cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer);
 
     //
     // Present our back buffer to our front buffer

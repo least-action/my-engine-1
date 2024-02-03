@@ -57,8 +57,6 @@ class App {
 	ID3D11Texture2D* mDepthStencil = nullptr;
 	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 	ID3D11Buffer* mConstantBuffer = nullptr;
-	ID3D11RasterizerState* mDefaultRasterizer = nullptr;
-	ID3D11RasterizerState* mNoneRasterizer = nullptr;
 
 
 	ID3D11Texture2D* mDepthOnlyTexture = nullptr;
@@ -83,10 +81,18 @@ class App {
 	ID3D11RasterizerState* mWireRS = nullptr;
 	PipelineStateObject mWirePSO;
 
+
+	ID3D11VertexShader* mGroundVS = nullptr;
 	ID3D11PixelShader* mGroundPS = nullptr;
 	PipelineStateObject mGroundPSO;
 
+	ID3D11VertexShader* mCubeMapVS = nullptr;
+	ID3D11PixelShader* mCubeMapPS = nullptr;
+	ID3D11InputLayout* mCubeMapIL = nullptr;
+	ID3D11RasterizerState* mCubeMapRS = nullptr; 
 	PipelineStateObject mCubeMapPSO;
+	
+	
 	PipelineStateObject mDepthOnlyPSO;
 
 
