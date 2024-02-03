@@ -6,6 +6,7 @@
 #include "CubeMap.h"
 #include "MathUtils.h"
 #include "Light.h"
+#include "PipelineStateObject.h"
 #include <windows.h>
 #include <directxmath.h>
 
@@ -32,6 +33,7 @@ class App {
 		MathUtils::Vector Look;
 		MathUtils::Vector Up;
 	};
+
 	Camera mCamera = {
 		{0.0f, 15.0f, -26.0f},
 		{0.0f, -0.374015f, 0.927423f},
@@ -41,8 +43,9 @@ class App {
 	HRESULT InitWindow();
 	HRESULT InitD3D();
 	void CleanupDevice();
-	void Render();
 
+	void SetPSO(PipelineStateObject pso);
+	void Render();
 	void UpdateModels();
 
 	std::unique_ptr<MainWindow> mMainWindow;
@@ -57,6 +60,28 @@ class App {
 	ID3D11RasterizerState* mDefaultRasterizer = nullptr;
 	ID3D11RasterizerState* mNoneRasterizer = nullptr;
 	ID3D11RasterizerState* mWireRasterizer = nullptr;
+
+	ID3D11Texture2D* mDepthOnlyTexture = nullptr;
+	ID3D11DepthStencilView* mDepthOnlyView = nullptr;
+    ID3D11ShaderResourceView* mDepthOnlySRV = nullptr;
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> mSolidILDesc =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	ID3D11VertexShader* mSolidVS = nullptr;
+	ID3D11PixelShader* mSolidPS = nullptr;
+	ID3D11InputLayout* mSolidIL = nullptr;
+	ID3D11RasterizerState* mSolidRS = nullptr;
+	
+	PipelineStateObject mSolidPSO;
+	PipelineStateObject mWirePSO;
+	PipelineStateObject mGroundPSO;
+	PipelineStateObject mCubeMapPSO;
+	PipelineStateObject mDepthOnlyPSO;
+
 
 	MathUtils::Matrix View;
 	MathUtils::Matrix mViewOnlyRotation;

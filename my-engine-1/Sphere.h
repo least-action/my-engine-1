@@ -131,15 +131,15 @@ public:
         }
 
 
-        // Define the input layout
-        std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
-        {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        };
-        D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderEarthVertex.hlsl", &mVertexShader, layout, &mInputLayout);
-        D3DUtils::CreatePixelShader(device, L"shaderEarthPixel.hlsl", &mPixelShader);
+        //// Define the input layout
+        //std::vector<D3D11_INPUT_ELEMENT_DESC> layout =
+        //{
+        //    { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        //    { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        //    { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        //};
+        //D3DUtils::CreateVertexShaderWithInputLayout(device, L"shaderEarthVertex.hlsl", &mVertexShader, layout, &mInputLayout);
+        //D3DUtils::CreatePixelShader(device, L"shaderEarthPixel.hlsl", &mPixelShader);
 
         D3DUtils::CreateVertexBufferWithIndexBuffer(
             device,
@@ -162,7 +162,7 @@ public:
         }
     }
 
-    void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer, ID3D11RasterizerState* rs, ID3D11RasterizerState* drs)
+    void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer)
     {
         WorldContantBuffer wb;
         auto transition = MathUtils::Matrix(
@@ -177,8 +177,6 @@ public:
         wb.mWorld = (transition * rotation).Transposed();
         context->UpdateSubresource(worldContantBuffer, 0, NULL, &wb, 0, 0);
 
-        context->IASetInputLayout(mInputLayout);
-
         UINT stride = sizeof(SimpleVertex);
         UINT offset = 0;
         context->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
@@ -189,17 +187,10 @@ public:
         // Set primitive topology
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        //context->RSSetState(rs);
-        context->RSSetState(drs);
-
-        context->VSSetShader(mVertexShader, NULL, 0);
         context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
-        context->PSSetShader(mPixelShader, NULL, 0);
         context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->PSSetShaderResources(0, 1, &mTextureResourceView);
         context->DrawIndexed(indiciesNum, 0, 0);
-
-        //context->RSSetState(drs);
     }
 };

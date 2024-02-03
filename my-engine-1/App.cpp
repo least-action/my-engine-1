@@ -142,8 +142,37 @@ HRESULT App::InitD3D()
         return hr;
     }
 
-    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+    // Create depth only texture
+    ZeroMemory(&descDepth, sizeof(descDepth));
+    descDepth.Width = width;
+    descDepth.Height = height;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    descDepth.SampleDesc.Count = 1;
+    descDepth.SampleDesc.Quality = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
+    hr = mDevice->CreateTexture2D(&descDepth, nullptr, &mDepthOnlyTexture);
+    if (FAILED(hr)) {
+        printf("CreateTexture2D error : %08X\n", hr);
+        return hr;
+    }
 
+    // Create the depth only view
+    ZeroMemory(&descDSV, sizeof(descDSV));
+    descDSV.Format = descDepth.Format;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
+    hr = mDevice->CreateDepthStencilView(mDepthOnlyTexture, &descDSV, &mDepthOnlyView);
+    if (FAILED(hr)) {
+        printf("CreateDepthStencilView error : %08X\n", hr);
+        return hr;
+    }
+
+    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
     
     // Setup the viewport
     D3D11_VIEWPORT vp;
@@ -173,9 +202,23 @@ HRESULT App::InitD3D()
         return hr;
     }
 
-    // Initialize the view matrix
-    View = MathUtils::MatrixLookAtLH(mCamera.Pos, mCamera.Look, mCamera.Up, mCamera.Up.Cross(mCamera.Look));
-    
+    // Define the input layout
+    D3DUtils::CreateVertexShaderWithInputLayout(mDevice, L"shaderDefaultVertex.hlsl", &mSolidVS, mSolidILDesc, &mSolidIL);
+    D3DUtils::CreatePixelShader(mDevice, L"shaderDefaultPixel.hlsl", &mSolidPS);
+    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+    rasterDesc.FillMode = D3D11_FILL_SOLID;
+    rasterDesc.CullMode = D3D11_CULL_BACK;
+    rasterDesc.DepthClipEnable = true;
+    mDevice->CreateRasterizerState(&rasterDesc, &mSolidRS);
+
+    mSolidPSO.IL = mSolidIL;
+    mSolidPSO.VS = mSolidVS;
+    mSolidPSO.PS = mSolidPS;
+    mSolidPSO.RS = mSolidRS;
+    mSolidPSO.RTV = mRenderTargetView;
+    mSolidPSO.DSV = mDepthStencilView;
+
+
     // Initialize the projection matrix
     Projection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.1f);
 
@@ -297,9 +340,19 @@ void App::UpdateModels()
     sphere.model.RotateRadian = -t;
 }
 
+void App::SetPSO(PipelineStateObject pso)
+{
+    mContext->IASetInputLayout(pso.IL);
+    mContext->VSSetShader(pso.VS, nullptr, 0);
+    mContext->PSSetShader(pso.PS, nullptr, 0);
+    mContext->RSSetState(pso.RS);
+    mContext->OMSetRenderTargets(1, &pso.RTV, pso.DSV);
+}
+
 void App::Render()
 {
     UpdateModels();
+
 
     //
     // Clear the back buffer
@@ -323,11 +376,22 @@ void App::Render()
     mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
 
     //
+    // Create Depth Only Texture
+    //
+    //mContext->OMSetRenderTargets(1, , mDepthOnlyView);
+    //surface.Render(mContext, mConstantBuffer);
+    
+    
+    //
     // Render
     //
-    surface.Render(mContext, mConstantBuffer);
+    
+    SetPSO(mSolidPSO);
     cubeBox.Render(mContext, mConstantBuffer);
-    sphere.Render(mContext, mConstantBuffer, mWireRasterizer, mDefaultRasterizer);
+    sphere.Render(mContext, mConstantBuffer);
+
+    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+    surface.Render(mContext, mConstantBuffer);
     cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer, mNoneRasterizer, mDefaultRasterizer);
 
     //

@@ -1,7 +1,6 @@
 #include "Common.hlsli"
 
 Texture2D _texture : register(t0);
-//SamplerState _sampler : register(s0);
 
 SamplerState MeshTextureSampler
 {
@@ -23,7 +22,6 @@ struct PS_INPUT
     float4 Pos : SV_POSITION;
     float4 PosWorld : POSITION0;
     float4 Norm : TEXCOORD0;
-    float4 Color : COLOR;
     float2 Textcoord : TEXCOORD1;
 };
 
@@ -31,7 +29,6 @@ struct PS_INPUT
 float4 main(PS_INPUT input) : SV_TARGET
 {
     float3 color = _texture.Sample(MeshTextureSampler, input.Textcoord);
-    
     float4 finalColor;
     float distance1 = length(input.PosWorld - Light1.Pos);
     float distance2 = length(input.PosWorld - Light2.Pos);
