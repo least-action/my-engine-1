@@ -4,6 +4,7 @@ cbuffer ConstantBuffer : register(b0)
 {
     matrix _;
     matrix Projection;
+    matrix InvProjection;
     Light Light1;
     Light Light2;
 }

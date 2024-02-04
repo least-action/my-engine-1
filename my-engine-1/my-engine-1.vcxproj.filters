@@ -91,6 +91,9 @@
     <FxCompile Include="shaderDefaultWirePixel.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="shaderDepthPixel.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="woodbox.png">

@@ -27,7 +27,7 @@ namespace D3DUtils {
 
         UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
-        flags |= D3DCOMPILE_DEBUG;
+        flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
         const D3D_SHADER_MACRO defines[] =
@@ -107,7 +107,7 @@ namespace D3DUtils {
 
         // Compile the pixel shader
         ID3DBlob* pPSBlob = nullptr;
-        hr = D3DUtils::CompileShader(fileName, "main", "ps_4_0", &pPSBlob);
+        hr = D3DUtils::CompileShader(fileName, "main", "ps_4_0_level_9_3", &pPSBlob);
         if (FAILED(hr)) {
             printf("CompileShader error : %08X\n", hr);
             throw std::runtime_error("");
@@ -234,45 +234,5 @@ namespace D3DUtils {
         DXGI_FORMAT format
     )
     {
-        LRESULT hr;
-
-        // Create texture
-        D3D11_TEXTURE2D_DESC desc;
-        desc.Width = width;
-        desc.Height = height;
-        desc.MipLevels = 1;
-        desc.ArraySize = 1;
-        desc.Format = format;
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.Usage = D3D11_USAGE_DEFAULT;
-        desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-        desc.CPUAccessFlags = 0;
-        desc.MiscFlags = 0;
-
-        D3D11_SUBRESOURCE_DATA initData;
-        initData.pSysMem = nullptr;
-        initData.SysMemPitch = width * sizeof(uint8_t);
-        //initData.SysMemSlicePitch = static_cast<UINT>(imageSize);
-
-        hr = device->CreateTexture2D(&desc, &initData, texture);
-        if (FAILED(hr) || texture == 0) {
-            printf("CreateTexture2D error : %08X\n", hr);
-            throw std::runtime_error("");
-        }
-
-        /*D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-        memset(&SRVDesc, 0, sizeof(SRVDesc));
-        SRVDesc.Format = format;
-        SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        SRVDesc.Texture2D.MipLevels = 1;
-
-        hr = device->CreateShaderResourceView(*texture, &SRVDesc, resourceView);
-        if (FAILED(hr))
-        {
-            (*texture)->Release();
-            printf("CreateShaderResourceView error : %08X\n", hr);
-            throw std::runtime_error("");
-        }*/
     }
 }

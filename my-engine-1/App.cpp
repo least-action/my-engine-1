@@ -221,41 +221,73 @@ HRESULT App::InitD3D()
 
     // Shadow
     {
-        // Create depth stencil texture
+        D3DUtils::CreatePixelShader(mDevice, L"shaderDepthPixel.hlsl", &mDepthOnlyPS);
+        
+        // Create depth texture
         D3D11_TEXTURE2D_DESC descDepth;
         ZeroMemory(&descDepth, sizeof(descDepth));
         descDepth.Width = width;
         descDepth.Height = height;
         descDepth.MipLevels = 1;
         descDepth.ArraySize = 1;
-        descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        descDepth.Format = DXGI_FORMAT_R32_TYPELESS;
         descDepth.SampleDesc.Count = 1;
         descDepth.SampleDesc.Quality = 0;
         descDepth.Usage = D3D11_USAGE_DEFAULT;
-        descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+        //descDepth.MiscFlags = 0;
         
         hr = mDevice->CreateTexture2D(&descDepth, nullptr, &mDepthOnlyTexture);
         if (FAILED(hr)) {
-            printf("CreateTexture2D error : %08X\n", hr);
+            printf("CreateTexture2D890 error : %08X\n", hr);
             return hr;
         }
 
         // Create the depth stencil view
         D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
         ZeroMemory(&descDSV, sizeof(descDSV));
-        descDSV.Format = descDepth.Format;
+        descDSV.Format = DXGI_FORMAT_D32_FLOAT;
         descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-        descDSV.Texture2D.MipSlice = 0;
+        //descDSV.Texture2D.MipSlice = 0;
         hr = mDevice->CreateDepthStencilView(mDepthOnlyTexture, &descDSV, &mDepthOnlyDSV);
         if (FAILED(hr)) {
-            printf("CreateDepthStencilView error : %08X\n", hr);
+            printf("CreateDepthStencilView456 error : %08X\n", hr);
             return hr;
         }
+
+        // Create shader resource view
+        D3D11_SHADER_RESOURCE_VIEW_DESC descSRV;
+        memset(&descSRV, 0, sizeof(descSRV));
+        descSRV.Format = DXGI_FORMAT_R32_FLOAT;
+        descSRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        descSRV.Texture2D.MipLevels = 1;
+
+        hr = mDevice->CreateShaderResourceView(mDepthOnlyTexture, &descSRV, &mDepthOnlySRV);
+        if (FAILED(hr))
+        {
+            //mDepthOnlyTexture->Release();
+            printf("CreateShaderResourceView123 error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+
+
+        D3D11_SAMPLER_DESC sampDesc;
+        ZeroMemory(&sampDesc, sizeof(sampDesc));
+        sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+        sampDesc.MinLOD = 0;
+        sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+        sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        
+        mDevice->CreateSamplerState(&sampDesc, &mShadowPointSS);
     }
     
 
     // Initialize the projection matrix
-    Projection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.1f);
+    Projection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, MathUtils::SCALE * 0.01f, MathUtils::SCALE * 5.0f);
+    InvProjection = MathUtils::InvMatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, MathUtils::SCALE * 0.01f, MathUtils::SCALE * 5.0f);
 
 	return S_OK;
 }
@@ -370,8 +402,8 @@ void App::UpdateModels()
     mViewOnlyRotation = MathUtils::MatrixLookAtLH({ 0.0f, 0.0f, 0.0f }, changedLook, changedUp, changedUp.Cross(changedLook));
 
     // Update cube
-    cubeBox.model.Pos = {5.0f * cos(t * 0.5f), 0.0f, 5.0f * sin(t * 0.5f)};
-    mPointLight2.Pos = { 10.0f * cos(t), 3.0f, 10.0f * -sin(t) };
+    cubeBox.model.Pos = { MathUtils::SCALE * 0.25f * cos(t * 0.5f), 0.0f, MathUtils::SCALE * 0.25f * sin(t * 0.5f)};
+    mPointLight2.Pos = { MathUtils::SCALE * 0.4f * cos(t), MathUtils::SCALE * 0.15f, MathUtils::SCALE * 0.4f * -sin(t) };
     sphere.model.RotateRadian = -t;
 }
 
@@ -405,6 +437,7 @@ void App::Render()
     ConstantBuffer cb1;
     cb1.View = View.Transposed();
     cb1.Projection = Projection.Transposed();
+    cb1.InvProjection = InvProjection.Transposed();
     cb1.Light1 = mPointLight1;
     cb1.Light2 = mPointLight2;
     mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
@@ -414,11 +447,16 @@ void App::Render()
     //
     mContext->OMSetRenderTargets(0, nullptr, mDepthOnlyDSV);
     SetPSO(mSolidPSO);
+    mContext->PSSetShader(mDepthOnlyPS, nullptr, 0);
+    mContext->PSSetSamplers(0, 1, &mShadowPointSS);
     cubeBox.Render(mContext, mConstantBuffer);
     sphere.Render(mContext, mConstantBuffer);
     SetPSO(mGroundPSO);
+    mContext->PSSetShader(mDepthOnlyPS, nullptr, 0);
+    mContext->PSSetSamplers(0, 1, &mShadowPointSS);
     surface.Render(mContext, mConstantBuffer);
     
+    mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);
     
     //
     // Render
@@ -427,13 +465,16 @@ void App::Render()
 
     SetPSO(mSolidPSO);
     //SetPSO(mWirePSO);
+    mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);
     cubeBox.Render(mContext, mConstantBuffer);
     sphere.Render(mContext, mConstantBuffer);
-
+    
     SetPSO(mGroundPSO);
+    mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);
     surface.Render(mContext, mConstantBuffer);
     
     SetPSO(mCubeMapPSO);
+    mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);
     cubeMap.Render(mContext, mViewOnlyRotation, mConstantBuffer);
 
     //

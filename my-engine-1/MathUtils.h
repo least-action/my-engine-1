@@ -3,7 +3,8 @@
 #include <directxmath.h>
 
 namespace MathUtils {
-	const float PI = 3.14159265358979323846;
+	const float PI = 3.14159265358979323846f;
+	const float SCALE = 1.0f;
 
 	void PrintXMMATRIX(DirectX::XMMATRIX m);
 	void PrintFloat3(DirectX::XMFLOAT3 f);
@@ -54,6 +55,7 @@ namespace MathUtils {
 
 	Matrix MatrixLookAtLH(Point pos, Vector look, Vector up, Vector right);
 	Matrix MatrixPerspectiveForLH(float fieldOfViewAngleY, float aspectRatio, float nearZ, float farZ);
+	Matrix InvMatrixPerspectiveForLH(float fieldOfViewAngleY, float aspectRatio, float nearZ, float farZ);
 
 	Matrix BuildRotation(const Vector& axis, float theta);
 

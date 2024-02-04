@@ -176,6 +176,17 @@ namespace MathUtils {
 		};
 	}
 
+	Matrix InvMatrixPerspectiveForLH(float fieldOfViewAngleY, float aspectRatio, float nearZ, float farZ)
+	{
+		float tanHalf = tan(fieldOfViewAngleY / 2.0f);
+		return {
+			aspectRatio * tanHalf, 0.0f, 0.0f, 0.0f,
+			0.0f, tanHalf, 0.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, -(farZ - nearZ) / (nearZ * farZ),
+			0.0f, 0.0f, 1.0f, farZ / (farZ - nearZ) * (farZ - nearZ) / (nearZ * farZ),
+		};
+	}
+
 	Matrix BuildRotation(const Vector &axis, float theta)
 	{
 		float c = cos(theta);

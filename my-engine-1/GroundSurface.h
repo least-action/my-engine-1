@@ -25,14 +25,14 @@ class GroundSurface
 
     SimpleVertex vertices[8] =
     {
-        { {-50.0f, -1.0f, -50.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
-        { {50.0f, -1.0f, -50.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
-        { {50.0f, -1.0f, 50.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
-        { {-50.0f, -1.0f, 50.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
-        { {-50.0f, -1.0f, -50.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
-        { {50.0f, -1.0f, -50.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
-        { {50.0f, -1.0f, 50.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} },
-        { {-50.0f, -1.0f, 50.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} }
+        { {MathUtils::SCALE * -2.5f,MathUtils::SCALE * -0.05f, MathUtils::SCALE * -2.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 2.5f, MathUtils::SCALE * -0.05f, MathUtils::SCALE * -2.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 2.5f, MathUtils::SCALE * -0.05f, MathUtils::SCALE * 2.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -2.5f,MathUtils::SCALE * -0.05f, MathUtils::SCALE * 2.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
+        { {MathUtils::SCALE * -2.5f,MathUtils::SCALE * -0.05f, MathUtils::SCALE * -2.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 2.5f, MathUtils::SCALE * -0.05f, MathUtils::SCALE * -2.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 2.5f, MathUtils::SCALE * -0.05f, MathUtils::SCALE * 2.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -2.5f,MathUtils::SCALE * -0.05f, MathUtils::SCALE * 2.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} }
     };
 
     WORD indices[12] =

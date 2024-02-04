@@ -37,35 +37,35 @@ class CubeBox {
     ID3D11InputLayout* mInputLayout = nullptr;
     SimpleVertex vertices[24] =
     {
-        { {-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
-        { {1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
-        { {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
-        { {-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
 
-        { {-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
-        { {1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
-        { {1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} },
-        { {-1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} },
 
-        { {-1.0f, -1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} },
-        { {-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} },
-        { {-1.0f, 1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} },
-        { {-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f},{0.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f,MathUtils::SCALE * 0.05f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f,MathUtils::SCALE * -0.05f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f}, {-1.0f, 0.0f, 0.0f},{0.0f, 0.0f} },
 
-        { {1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} },
-        { {1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} },
-        { {1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} },
-        { {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} },
+        { {MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f,MathUtils::SCALE * 0.05f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f,MathUtils::SCALE * -0.05f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} },
 
-        { {-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} },
-        { {1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} },
-        { {1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} },
-        { {-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f,MathUtils::SCALE * -0.05f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * -0.05f,MathUtils::SCALE * -0.05f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * -0.05f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} },
 
-        { {-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f} },
-        { {1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f} },
-        { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f} },
-        { {-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * -0.05f,MathUtils::SCALE * 0.05f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * -0.05f,MathUtils::SCALE * 0.05f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f} },
+        { {MathUtils::SCALE * 0.05f,  MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f} },
+        { {MathUtils::SCALE * -0.05f, MathUtils::SCALE * 0.05f, MathUtils::SCALE * 0.05f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f} },
     };
 
     WORD indices[36] =

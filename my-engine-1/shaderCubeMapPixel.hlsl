@@ -7,6 +7,7 @@ Texture2D _textureZN : register(t3);
 Texture2D _textureYP : register(t4);
 Texture2D _textureYN : register(t5);
 
+
 SamplerState MeshTextureSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
@@ -18,6 +19,7 @@ cbuffer ConstantBuffer : register(b0)
 {
     matrix View;
     matrix Projection;
+    matrix InvProjection;
     Light Light1;
     Light Light2;
 }

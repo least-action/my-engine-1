@@ -4,6 +4,7 @@ cbuffer ConstantBuffer : register(b0)
 {
     matrix View;
     matrix Projection;
+    matrix InvProjection;
     Light Light1;
     Light Light2;
 }
@@ -24,6 +25,7 @@ struct PS_INPUT
 {
     float4 Pos : SV_POSITION;
     float4 PosWorld : POSITION0;
+    float4 Pos2 : POSITION1;
     float4 Norm : TEXCOORD0;
     float2 Textcoord : TEXCOORD1;
 };
@@ -38,6 +40,7 @@ PS_INPUT main(VS_INPUT input)
     output.Pos = mul(output.Pos, Projection);
     output.Norm = mul(input.Norm, World);
     output.Textcoord = input.Textcoord;
+    output.Pos2 = output.Pos;
     
     return output;
 }
