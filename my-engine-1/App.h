@@ -16,8 +16,8 @@
 class App {
 	struct ConstantBuffer
 	{
-		MathUtils::Matrix View;
-		MathUtils::Matrix Projection;
+		MathUtils::Matrix mView;
+		MathUtils::Matrix mProjection;
 		MathUtils::Matrix InvProjection;
 		Light Light1;
 		Light Light2;
@@ -97,9 +97,9 @@ class App {
 	ID3D11ShaderResourceView* mDepthOnlySRV = nullptr;
 
 
-	MathUtils::Matrix View;
+	MathUtils::Matrix mView;
 	MathUtils::Matrix mViewOnlyRotation;
-	MathUtils::Matrix Projection;
+	MathUtils::Matrix mProjection;
 	MathUtils::Matrix InvProjection;
 
 	float mSpeed = MathUtils::SCALE * 0.5f;
@@ -109,7 +109,7 @@ class App {
 	Sphere sphere{ MathUtils::SCALE * 0.25f, 10, 10 };
 	CubeMap cubeMap{ MathUtils::SCALE * 5.0f, 10, 10 };
 	
-	Light mPointLight1{ { -MathUtils::SCALE * 0.5f, MathUtils::SCALE * 0.75f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.0f, 0 };
+	Light mPointLight1{ { -MathUtils::SCALE * 1.0f, MathUtils::SCALE * 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.0f, 0 };
 	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.05f, 0 };
 
 public:

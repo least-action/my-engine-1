@@ -10,4 +10,5 @@ struct Light {
 	
 	uint32_t Type;
 	uint32_t _buffer1[3];
+	MathUtils::Matrix View;
 };

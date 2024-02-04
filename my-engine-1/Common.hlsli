@@ -7,6 +7,8 @@ struct Light
     
     uint Type;
     float3 _buffer1;
+    
+    matrix View;
 };
 
 

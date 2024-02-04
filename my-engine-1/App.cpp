@@ -286,8 +286,8 @@ HRESULT App::InitD3D()
     
 
     // Initialize the projection matrix
-    Projection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, MathUtils::SCALE * 0.01f, MathUtils::SCALE * 5.0f);
-    InvProjection = MathUtils::InvMatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, MathUtils::SCALE * 0.01f, MathUtils::SCALE * 5.0f);
+    mProjection = MathUtils::MatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, MathUtils::SCALE * 0.1f, MathUtils::SCALE * 5.0f);
+    InvProjection = MathUtils::InvMatrixPerspectiveForLH(DirectX::XM_PIDIV4, width / (FLOAT)height, MathUtils::SCALE * 0.1f, MathUtils::SCALE * 5.0f);
 
 	return S_OK;
 }
@@ -398,8 +398,9 @@ void App::UpdateModels()
     }
     mCamera.Pos = mCamera.Pos + (movingDir * (dt * mSpeed));
 
-    View = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
+    mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
     mViewOnlyRotation = MathUtils::MatrixLookAtLH({ 0.0f, 0.0f, 0.0f }, changedLook, changedUp, changedUp.Cross(changedLook));
+    mPointLight1.View = MathUtils::MatrixLookAtLH(mPointLight1.Pos, { 0.70710678f, -0.70710678f, 0.0f }, { 0.70710678f, 0.70710678f, 0.0f }, { 0.0f, 0.0f, -1.0f });
 
     // Update cube
     cubeBox.model.Pos = { MathUtils::SCALE * 0.25f * cos(t * 0.5f), 0.0f, MathUtils::SCALE * 0.25f * sin(t * 0.5f)};
@@ -435,8 +436,8 @@ void App::Render()
     // Update matrix variables and lighting variables
     //
     ConstantBuffer cb1;
-    cb1.View = View.Transposed();
-    cb1.Projection = Projection.Transposed();
+    cb1.mView = mPointLight1.View.Transposed();
+    cb1.mProjection = mProjection.Transposed();
     cb1.InvProjection = InvProjection.Transposed();
     cb1.Light1 = mPointLight1;
     cb1.Light2 = mPointLight2;
@@ -458,6 +459,16 @@ void App::Render()
     
     mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);
     
+    //
+    // Update matrix variables and lighting variables
+    //
+    cb1.mView = mView.Transposed();
+    cb1.mProjection = mProjection.Transposed();
+    cb1.InvProjection = InvProjection.Transposed();
+    cb1.Light1 = mPointLight1;
+    cb1.Light2 = mPointLight2;
+    mContext->UpdateSubresource(mConstantBuffer, 0, NULL, &cb1, 0, 0);
+
     //
     // Render
     //
