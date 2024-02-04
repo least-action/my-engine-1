@@ -96,6 +96,10 @@ class App {
 	ID3D11DepthStencilView* mDepthOnlyDSV = nullptr;
 	ID3D11ShaderResourceView* mDepthOnlySRV = nullptr;
 
+	ID3D11Texture2D* mDepthOnlyTexture2 = nullptr;
+	ID3D11DepthStencilView* mDepthOnlyDSV2 = nullptr;
+	ID3D11ShaderResourceView* mDepthOnlySRV2 = nullptr;
+
 
 	MathUtils::Matrix mView;
 	MathUtils::Matrix mViewOnlyRotation;
@@ -109,8 +113,8 @@ class App {
 	Sphere sphere{ MathUtils::SCALE * 0.25f, 10, 10 };
 	CubeMap cubeMap{ MathUtils::SCALE * 5.0f, 10, 10 };
 	
-	Light mPointLight1{ { -MathUtils::SCALE * 1.0f, MathUtils::SCALE * 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.0f, 0 };
-	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 0.0f, 0.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.05f, 0 };
+	Light mPointLight1{ { -MathUtils::SCALE * 1.0f, MathUtils::SCALE * 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.2f, 0 };
+	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 0.0f, 0.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.5f, 0 };
 
 public:
 	App() : mMainWindow(new MainWindow()) {};

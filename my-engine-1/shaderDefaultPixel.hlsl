@@ -2,6 +2,7 @@
 
 Texture2D _texture : register(t0);
 Texture2D _textureDepth : register(t10);
+Texture2D _textureDepth2 : register(t11);
 
 SamplerState DepthSampler : register(s0);
 
