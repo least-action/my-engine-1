@@ -400,12 +400,18 @@ void App::UpdateModels()
 
     mView = MathUtils::MatrixLookAtLH(mCamera.Pos, changedLook, changedUp, changedUp.Cross(changedLook));
     mViewOnlyRotation = MathUtils::MatrixLookAtLH({ 0.0f, 0.0f, 0.0f }, changedLook, changedUp, changedUp.Cross(changedLook));
-    mPointLight1.View = MathUtils::MatrixLookAtLH(mPointLight1.Pos, { 0.70710678f, -0.70710678f, 0.0f }, { 0.70710678f, 0.70710678f, 0.0f }, { 0.0f, 0.0f, -1.0f });
+    
+
 
     // Update cube
     cubeBox.model.Pos = { MathUtils::SCALE * 0.25f * cos(t * 0.5f), 0.0f, MathUtils::SCALE * 0.25f * sin(t * 0.5f)};
     mPointLight2.Pos = { MathUtils::SCALE * 0.4f * cos(t), MathUtils::SCALE * 0.15f, MathUtils::SCALE * 0.4f * -sin(t) };
     sphere.model.RotateRadian = -t;
+    mPointLight1.View = MathUtils::MatrixLookAtLH(mPointLight1.Pos, { 0.70710678f, -0.70710678f, 0.0f }, { 0.70710678f, 0.70710678f, 0.0f }, { 0.0f, 0.0f, -1.0f });
+    MathUtils::Vector light2Look = {};
+    MathUtils::Vector light2Up = {};
+    mPointLight2.View = MathUtils::MatrixLookAtLH(mPointLight2.Pos, light2Look, light2Up, light2Up.Cross(light2Look));
+
 }
 
 void App::SetPSO(PipelineStateObject pso)

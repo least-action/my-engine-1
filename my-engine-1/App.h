@@ -110,7 +110,7 @@ class App {
 	CubeMap cubeMap{ MathUtils::SCALE * 5.0f, 10, 10 };
 	
 	Light mPointLight1{ { -MathUtils::SCALE * 1.0f, MathUtils::SCALE * 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.0f, 0 };
-	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.05f, 0 };
+	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 0.0f, 0.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.05f, 0 };
 
 public:
 	App() : mMainWindow(new MainWindow()) {};
