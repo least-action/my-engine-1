@@ -38,4 +38,13 @@ namespace D3DUtils {
         ID3D11ShaderResourceView** resourceView,
         DXGI_FORMAT format
     );
+
+    void CreateDepthOnlyTexture(
+        UINT width,
+        UINT height,
+        ID3D11Device* device,
+        ID3D11Texture2D** texture,
+        ID3D11ShaderResourceView** resourceView,
+        DXGI_FORMAT format
+    );
 }

@@ -59,11 +59,6 @@ class App {
 	ID3D11Buffer* mConstantBuffer = nullptr;
 
 
-	ID3D11Texture2D* mDepthOnlyTexture = nullptr;
-	ID3D11DepthStencilView* mDepthOnlyView = nullptr;
-    ID3D11ShaderResourceView* mDepthOnlySRV = nullptr;
-
-
 	std::vector<D3D11_INPUT_ELEMENT_DESC> mSolidILDesc =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -86,14 +81,17 @@ class App {
 	ID3D11PixelShader* mGroundPS = nullptr;
 	PipelineStateObject mGroundPSO;
 
+
 	ID3D11VertexShader* mCubeMapVS = nullptr;
 	ID3D11PixelShader* mCubeMapPS = nullptr;
 	ID3D11InputLayout* mCubeMapIL = nullptr;
-	ID3D11RasterizerState* mCubeMapRS = nullptr; 
+	ID3D11RasterizerState* mCubeMapRS = nullptr;
 	PipelineStateObject mCubeMapPSO;
 	
-	
-	PipelineStateObject mDepthOnlyPSO;
+
+	ID3D11Texture2D* mDepthOnlyTexture = nullptr;
+	ID3D11DepthStencilView* mDepthOnlyDSV = nullptr;
+	ID3D11ShaderResourceView* mDepthOnlySRV = nullptr;
 
 
 	MathUtils::Matrix View;

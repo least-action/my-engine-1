@@ -92,96 +92,71 @@ HRESULT App::InitD3D()
     }
     
     // Create depth stencil texture
-    D3D11_TEXTURE2D_DESC descDepth;
-    ZeroMemory(&descDepth, sizeof(descDepth));
-    descDepth.Width = width;
-    descDepth.Height = height;
-    descDepth.MipLevels = 1;
-    descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    descDepth.SampleDesc.Count = 1;
-    descDepth.SampleDesc.Quality = 0;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    descDepth.CPUAccessFlags = 0;
-    descDepth.MiscFlags = 0;
-    hr = mDevice->CreateTexture2D(&descDepth, nullptr, &mDepthStencil);
-    if (FAILED(hr)) {
-        printf("CreateTexture2D error : %08X\n", hr);
-        return hr;
-    }
-        
-    // Create the depth stencil view
-    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    ZeroMemory(&descDSV, sizeof(descDSV));
-    descDSV.Format = descDepth.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    descDSV.Texture2D.MipSlice = 0;
-    hr = mDevice->CreateDepthStencilView(mDepthStencil, &descDSV, &mDepthStencilView);
-    if (FAILED(hr)) {
-        printf("CreateDepthStencilView error : %08X\n", hr);
-        return hr;
-    }
+    {
+        D3D11_TEXTURE2D_DESC descDepth;
+        ZeroMemory(&descDepth, sizeof(descDepth));
+        descDepth.Width = width;
+        descDepth.Height = height;
+        descDepth.MipLevels = 1;
+        descDepth.ArraySize = 1;
+        descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        descDepth.SampleDesc.Count = 1;
+        descDepth.SampleDesc.Quality = 0;
+        descDepth.Usage = D3D11_USAGE_DEFAULT;
+        descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        descDepth.CPUAccessFlags = 0;
+        descDepth.MiscFlags = 0;
+        hr = mDevice->CreateTexture2D(&descDepth, nullptr, &mDepthStencil);
+        if (FAILED(hr)) {
+            printf("CreateTexture2D error : %08X\n", hr);
+            return hr;
+        }
 
-    // Create depth only texture
-    ZeroMemory(&descDepth, sizeof(descDepth));
-    descDepth.Width = width;
-    descDepth.Height = height;
-    descDepth.MipLevels = 1;
-    descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    descDepth.SampleDesc.Count = 1;
-    descDepth.SampleDesc.Quality = 0;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    descDepth.CPUAccessFlags = 0;
-    descDepth.MiscFlags = 0;
-    hr = mDevice->CreateTexture2D(&descDepth, nullptr, &mDepthOnlyTexture);
-    if (FAILED(hr)) {
-        printf("CreateTexture2D error : %08X\n", hr);
-        return hr;
+        // Create the depth stencil view
+        D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+        ZeroMemory(&descDSV, sizeof(descDSV));
+        descDSV.Format = descDepth.Format;
+        descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        descDSV.Texture2D.MipSlice = 0;
+        hr = mDevice->CreateDepthStencilView(mDepthStencil, &descDSV, &mDepthStencilView);
+        if (FAILED(hr)) {
+            printf("CreateDepthStencilView error : %08X\n", hr);
+            return hr;
+        }
     }
-
-    // Create the depth only view
-    ZeroMemory(&descDSV, sizeof(descDSV));
-    descDSV.Format = descDepth.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    descDSV.Texture2D.MipSlice = 0;
-    hr = mDevice->CreateDepthStencilView(mDepthOnlyTexture, &descDSV, &mDepthOnlyView);
-    if (FAILED(hr)) {
-        printf("CreateDepthStencilView error : %08X\n", hr);
-        return hr;
-    }
-
-    //mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
     
     // Setup the viewport
-    D3D11_VIEWPORT vp;
-    vp.Width = (FLOAT)width;
-    vp.Height = (FLOAT)height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    mContext->RSSetViewports(1, &vp);
+    {
+        D3D11_VIEWPORT vp;
+        vp.Width = (FLOAT)width;
+        vp.Height = (FLOAT)height;
+        vp.MinDepth = 0.0f;
+        vp.MaxDepth = 1.0f;
+        vp.TopLeftX = 0;
+        vp.TopLeftY = 0;
+        mContext->RSSetViewports(1, &vp);
 
-    surface.Initialize(mDevice, mContext);
-    cubeBox.Initialize(mDevice, mContext);
-    sphere.Initialize(mDevice, mContext);
-    cubeMap.Initialize(mDevice, mContext);
+        surface.Initialize(mDevice, mContext);
+        cubeBox.Initialize(mDevice, mContext);
+        sphere.Initialize(mDevice, mContext);
+        cubeMap.Initialize(mDevice, mContext);
+    }
     
     // Create the constant buffer
-    D3D11_BUFFER_DESC bd;
-    ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(ConstantBuffer);
-    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    bd.CPUAccessFlags = 0;
-    hr = mDevice->CreateBuffer(&bd, NULL, &mConstantBuffer);
-    if (FAILED(hr)) {
-        printf("CreateBuffer(constant buffer) error : %08X\n", hr);
-        return hr;
+    {
+        D3D11_BUFFER_DESC bd;
+        ZeroMemory(&bd, sizeof(bd));
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = sizeof(ConstantBuffer);
+        bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        bd.CPUAccessFlags = 0;
+        hr = mDevice->CreateBuffer(&bd, NULL, &mConstantBuffer);
+        if (FAILED(hr)) {
+            printf("CreateBuffer(constant buffer) error : %08X\n", hr);
+            return hr;
+        }
     }
+    
 
     D3D11_RASTERIZER_DESC rasterDesc;
 
@@ -199,8 +174,6 @@ HRESULT App::InitD3D()
         mSolidPSO.VS = mSolidVS;
         mSolidPSO.PS = mSolidPS;
         mSolidPSO.RS = mSolidRS;
-        mSolidPSO.RTV = mRenderTargetView;
-        mSolidPSO.DSV = mDepthStencilView;
     }
     
     // Wire PSO
@@ -215,8 +188,6 @@ HRESULT App::InitD3D()
         mWirePSO.VS = mSolidVS;
         mWirePSO.PS = mWirePS;
         mWirePSO.RS = mWireRS;
-        mWirePSO.RTV = mRenderTargetView;
-        mWirePSO.DSV = mDepthStencilView;
     }
 
     // Ground PSO
@@ -226,8 +197,6 @@ HRESULT App::InitD3D()
         mGroundPSO.VS = mSolidVS;
         mGroundPSO.PS = mGroundPS;
         mGroundPSO.RS = mSolidRS;
-        mGroundPSO.RTV = mRenderTargetView;
-        mGroundPSO.DSV = mDepthStencilView;
     }
 
     // CubeMap PSO
@@ -248,8 +217,40 @@ HRESULT App::InitD3D()
         mCubeMapPSO.VS = mCubeMapVS;
         mCubeMapPSO.PS = mCubeMapPS;
         mCubeMapPSO.RS = mCubeMapRS;
-        mCubeMapPSO.RTV = mRenderTargetView;
-        mCubeMapPSO.DSV = mDepthStencilView;
+    }
+
+    // Shadow
+    {
+        // Create depth stencil texture
+        D3D11_TEXTURE2D_DESC descDepth;
+        ZeroMemory(&descDepth, sizeof(descDepth));
+        descDepth.Width = width;
+        descDepth.Height = height;
+        descDepth.MipLevels = 1;
+        descDepth.ArraySize = 1;
+        descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        descDepth.SampleDesc.Count = 1;
+        descDepth.SampleDesc.Quality = 0;
+        descDepth.Usage = D3D11_USAGE_DEFAULT;
+        descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        
+        hr = mDevice->CreateTexture2D(&descDepth, nullptr, &mDepthOnlyTexture);
+        if (FAILED(hr)) {
+            printf("CreateTexture2D error : %08X\n", hr);
+            return hr;
+        }
+
+        // Create the depth stencil view
+        D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+        ZeroMemory(&descDSV, sizeof(descDSV));
+        descDSV.Format = descDepth.Format;
+        descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        descDSV.Texture2D.MipSlice = 0;
+        hr = mDevice->CreateDepthStencilView(mDepthOnlyTexture, &descDSV, &mDepthOnlyDSV);
+        if (FAILED(hr)) {
+            printf("CreateDepthStencilView error : %08X\n", hr);
+            return hr;
+        }
     }
     
 
@@ -380,7 +381,6 @@ void App::SetPSO(PipelineStateObject pso)
     mContext->VSSetShader(pso.VS, nullptr, 0);
     mContext->PSSetShader(pso.PS, nullptr, 0);
     mContext->RSSetState(pso.RS);
-    mContext->OMSetRenderTargets(1, &pso.RTV, pso.DSV);
 }
 
 void App::Render()
@@ -396,7 +396,8 @@ void App::Render()
     //
     // Clear the depth buffer to 1.0 (max depth)
     //
-    mContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+    mContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    mContext->ClearDepthStencilView(mDepthOnlyDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     //
     // Update matrix variables and lighting variables
@@ -411,14 +412,19 @@ void App::Render()
     //
     // Create Depth Only Texture
     //
-    //mContext->OMSetRenderTargets(1, , mDepthOnlyView);
-    //surface.Render(mContext, mConstantBuffer);
+    mContext->OMSetRenderTargets(0, nullptr, mDepthOnlyDSV);
+    SetPSO(mSolidPSO);
+    cubeBox.Render(mContext, mConstantBuffer);
+    sphere.Render(mContext, mConstantBuffer);
+    SetPSO(mGroundPSO);
+    surface.Render(mContext, mConstantBuffer);
     
     
     //
     // Render
     //
-    
+    mContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+
     SetPSO(mSolidPSO);
     //SetPSO(mWirePSO);
     cubeBox.Render(mContext, mConstantBuffer);
