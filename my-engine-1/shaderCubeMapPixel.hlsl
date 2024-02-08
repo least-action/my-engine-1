@@ -33,7 +33,9 @@ struct PS_INPUT
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    float4 color = float4(1.0, 0.0, 0.0, 1.0);
+    float4 color;
+    
+    
     float4 np = normalize(input.OriginPos);
     if (abs(np.z) > abs(np.x) && abs(np.z) > abs(np.y))
     {

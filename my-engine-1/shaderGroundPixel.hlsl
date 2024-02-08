@@ -29,13 +29,25 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     float4 viewPos = mul(input.PosWorld, transpose(Light1.View));
     float4 viewPro = mul(viewPos, Projection);
-    float depth = _textureDepth.Sample(DepthSampler, float2((viewPro.x / viewPro.w + 1.0) / 2.0, (-viewPro.y / viewPro.w + 1.0) / 2.0)).r;
+    float depth = _textureDepth.Sample(
+        DepthSampler,
+        float2(
+            (viewPro.x / viewPro.w + 1.0) / 2.0,
+            (-viewPro.y / viewPro.w + 1.0) / 2.0
+        )
+    ).r;
     float z = 5.0 * 0.1 / (5.0 - (depth * (5.0 - 0.1)));
     bool isShadow = viewPos.z > z + 0.01;
     
     float4 viewPos2 = mul(input.PosWorld, transpose(Light2.View));
     float4 viewPro2 = mul(viewPos2, Projection);
-    float depth2 = _textureDepth2.Sample(DepthSampler, float2((viewPro2.x / viewPro2.w + 1.0) / 2.0, (-viewPro2.y / viewPro2.w + 1.0) / 2.0)).r;
+    float depth2 = _textureDepth2.Sample(
+        DepthSampler,
+        float2(
+            (viewPro2.x / viewPro2.w + 1.0) / 2.0,
+            (-viewPro2.y / viewPro2.w + 1.0) / 2.0
+        )
+    ).r;
     float z2 = 5.0 * 0.1 / (5.0 - (depth2 * (5.0 - 0.1)));
     bool isShadow2 = viewPos2.z > z2 + 0.01;
     

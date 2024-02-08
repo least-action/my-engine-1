@@ -1,6 +1,7 @@
 #pragma once
 #include "MainWindow.h"
 #include "CubeBox.h"
+#include "LightPosition.h"
 #include "Sphere.h"
 #include "GroundSurface.h"
 #include "CubeMap.h"
@@ -72,6 +73,9 @@ class App {
 	ID3D11RasterizerState* mSolidRS = nullptr;
 	PipelineStateObject mSolidPSO;
 
+	ID3D11PixelShader* mLightPS = nullptr;
+	PipelineStateObject mLightPSO;
+
 
 	ID3D11PixelShader* mWirePS = nullptr;
 	ID3D11RasterizerState* mWireRS = nullptr;
@@ -109,12 +113,14 @@ class App {
 	float mSpeed = MathUtils::SCALE * 0.5f;
 
 	CubeBox cubeBox;
+	LightPosition l1;
+	LightPosition l2;
 	GroundSurface surface;
 	Sphere sphere{ MathUtils::SCALE * 0.25f, 10, 10 };
-	CubeMap cubeMap{ MathUtils::SCALE * 5.0f, 10, 10 };
+	CubeMap cubeMap{ MathUtils::SCALE * 5.0f, 30, 30 };
 	
-	Light mPointLight1{ { -MathUtils::SCALE * 1.0f, MathUtils::SCALE * 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.2f, 0 };
-	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 0.0f, 0.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.5f, 0 };
+	Light mPointLight1{ { -MathUtils::SCALE * 1.0f, MathUtils::SCALE * 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 1.2f, 0 };
+	Light mPointLight2{ { MathUtils::SCALE * 0.4f, MathUtils::SCALE * 0.15f, 0.0f }, { 1.0f, 1.0f, 1.0f }, MathUtils::SCALE * MathUtils::SCALE * 0.5f, 0 };
 
 public:
 	App() : mMainWindow(new MainWindow()) {};

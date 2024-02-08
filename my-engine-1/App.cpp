@@ -140,6 +140,8 @@ HRESULT App::InitD3D()
         cubeBox.Initialize(mDevice, mContext);
         sphere.Initialize(mDevice, mContext);
         cubeMap.Initialize(mDevice, mContext);
+        l1.Initialize(mDevice, mContext);
+        l2.Initialize(mDevice, mContext);
     }
     
     // Create the constant buffer
@@ -174,6 +176,16 @@ HRESULT App::InitD3D()
         mSolidPSO.VS = mSolidVS;
         mSolidPSO.PS = mSolidPS;
         mSolidPSO.RS = mSolidRS;
+    }
+
+    // Light PSO
+    {
+        D3DUtils::CreatePixelShader(mDevice, L"shaderLightPositionPixel.hlsl", &mLightPS);
+        
+        mLightPSO.IL = mSolidIL;
+        mLightPSO.VS = mSolidVS;
+        mLightPSO.PS = mLightPS;
+        mLightPSO.RS = mSolidRS;
     }
     
     // Wire PSO
@@ -429,6 +441,8 @@ void App::UpdateModels()
     float xzLength = pow(light2Look.x * light2Look.x + light2Look.z * light2Look.z, 0.5);
     MathUtils::Vector light2Up = {light2Look.x * -light2Look.y / xzLength, xzLength, light2Look.z * -light2Look.y / xzLength};
     mPointLight2.View = MathUtils::MatrixLookAtLH(mPointLight2.Pos, light2Look, light2Up, light2Up.Cross(light2Look));
+    l1.model.Pos = mPointLight1.Pos;
+    l2.model.Pos = mPointLight2.Pos;
 }
 
 void App::SetPSO(PipelineStateObject pso)
@@ -523,7 +537,11 @@ void App::Render()
     mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);
     mContext->PSSetShaderResources(11, 1, &mDepthOnlySRV2);
     cubeBox.Render(mContext, mConstantBuffer);
+    //SetPSO(mWirePSO);
     sphere.Render(mContext, mConstantBuffer);
+    SetPSO(mLightPSO);
+    l1.Render(mContext, mConstantBuffer);
+    l2.Render(mContext, mConstantBuffer);
     
     SetPSO(mGroundPSO);
     mContext->PSSetShaderResources(10, 1, &mDepthOnlySRV);

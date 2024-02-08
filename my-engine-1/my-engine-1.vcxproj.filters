@@ -71,6 +71,9 @@
     <ClInclude Include="PipelineStateObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LightPosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaderCubeMapPixel.hlsl">
@@ -92,6 +95,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="shaderDepthPixel.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderLightPositionPixel.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
