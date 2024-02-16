@@ -202,6 +202,17 @@ HRESULT App::InitD3D()
         mWirePSO.RS = mWireRS;
     }
 
+    // Sphere PSO
+    {
+        D3DUtils::CreateVertexShaderWithInputLayout(mDevice, L"shaderSphereVertex.hlsl", &mSphereVS, mSolidILDesc, &mSphereIL);
+        D3DUtils::CreateGeometryShader(mDevice, L"shaderSphereGeometry.hlsl", &mSphereGS);
+        mSpherePSO.IL = mSphereIL;
+        mSpherePSO.VS = mSphereVS;
+        mSpherePSO.GS = mSphereGS;
+        mSpherePSO.PS = mSolidPS;
+        mSpherePSO.RS = mSolidRS;
+    }
+
     // Ground PSO
     {
         D3DUtils::CreatePixelShader(mDevice, L"shaderGroundPixel.hlsl", &mGroundPS);
@@ -449,6 +460,7 @@ void App::SetPSO(PipelineStateObject pso)
 {
     mContext->IASetInputLayout(pso.IL);
     mContext->VSSetShader(pso.VS, nullptr, 0);
+    mContext->GSSetShader(pso.GS, nullptr, 0);
     mContext->PSSetShader(pso.PS, nullptr, 0);
     mContext->RSSetState(pso.RS);
 }
@@ -508,6 +520,7 @@ void App::Render()
     mContext->PSSetShader(mDepthOnlyPS, nullptr, 0);
     mContext->PSSetSamplers(0, 1, &mShadowPointSS);
     cubeBox.Render(mContext, mConstantBuffer);
+    //SetPSO(mSpherePSO);
     sphere.Render(mContext, mConstantBuffer);
     SetPSO(mGroundPSO);
     mContext->PSSetShader(mDepthOnlyPS, nullptr, 0);
@@ -538,6 +551,7 @@ void App::Render()
     mContext->PSSetShaderResources(11, 1, &mDepthOnlySRV2);
     cubeBox.Render(mContext, mConstantBuffer);
     //SetPSO(mWirePSO);
+    SetPSO(mSpherePSO);
     sphere.Render(mContext, mConstantBuffer);
     SetPSO(mLightPSO);
     l1.Render(mContext, mConstantBuffer);

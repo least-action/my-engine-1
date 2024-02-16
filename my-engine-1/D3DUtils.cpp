@@ -97,6 +97,31 @@ namespace D3DUtils {
         }
     }
 
+    void CreateGeometryShader(
+        ID3D11Device* device,
+        LPCWSTR fileName,
+        ID3D11GeometryShader** shader
+    )
+    {
+        LRESULT hr;
+
+        // Compile the geometry shader
+        ID3DBlob* pGSBlob = nullptr;
+        hr = D3DUtils::CompileShader(fileName, "main", "gs_4_0", &pGSBlob);
+        if (FAILED(hr)) {
+            printf("CompileShader error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+
+        // Create the geometry shader
+        hr = device->CreateGeometryShader(pGSBlob->GetBufferPointer(), pGSBlob->GetBufferSize(), nullptr, shader);
+        pGSBlob->Release();
+        if (FAILED(hr)) {
+            printf("CreateGeometryShader error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
+    }
+
     void CreatePixelShader(
         ID3D11Device* device,
         LPCWSTR fileName,

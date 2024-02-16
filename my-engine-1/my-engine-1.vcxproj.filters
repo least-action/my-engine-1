@@ -100,6 +100,12 @@
     <FxCompile Include="shaderLightPositionPixel.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="shaderSphereGeometry.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaderSphereVertex.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="woodbox.png">
@@ -124,6 +130,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="bottom.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_roughness.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_albedo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_ao.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_height.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_metallic.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_normal-dx.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

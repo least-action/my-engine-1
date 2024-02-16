@@ -204,10 +204,32 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="shaderSphereGeometry.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shaderSphereVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="back.png" />
     <Image Include="bottom.png" />
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_albedo.png" />
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_ao.png" />
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_height.png" />
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_metallic.png" />
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_normal-dx.png" />
+    <Image Include="D:\download\ribbed-chipped-metal-ue\ribbed-chipped-metal-ue\ribbed-chipped-metal_roughness.png" />
     <Image Include="earth.png" />
     <Image Include="front.png" />
     <Image Include="left.png" />

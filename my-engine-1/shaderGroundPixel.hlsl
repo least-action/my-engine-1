@@ -18,7 +18,6 @@ struct PS_INPUT
 {
     float4 Pos : SV_POSITION;
     float4 PosWorld : POSITION0;
-    float4 Pos2 : POSITION1;
     float4 Norm : TEXCOORD0;
     float2 TextCoord : TEXCOORD1;
 };
@@ -71,7 +70,7 @@ float4 main(PS_INPUT input) : SV_TARGET
         float distance1 = length(input.PosWorld - Light1.Pos);
         float3 rl = Light1.Intensity / (distance1 * distance1) * dot(input.Norm, normalize(Light1.Pos - input.PosWorld)) * Light1.Color;
         rlColor.r += rl.r;
-        rlColor.g += rl.g;
+        rlColor.g += rl.g;  
         rlColor.b += rl.b;
 
     }

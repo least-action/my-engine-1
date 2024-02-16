@@ -15,6 +15,12 @@ namespace D3DUtils {
         ID3D11InputLayout** inputLayout
     );
 
+    void CreateGeometryShader(
+        ID3D11Device* device,
+        LPCWSTR fileName,
+        ID3D11GeometryShader** shader
+    );
+
     void CreatePixelShader(
         ID3D11Device* device,
         LPCWSTR fileName,

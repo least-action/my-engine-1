@@ -73,6 +73,11 @@ class App {
 	ID3D11RasterizerState* mSolidRS = nullptr;
 	PipelineStateObject mSolidPSO;
 
+	ID3D11InputLayout* mSphereIL = nullptr;
+	ID3D11VertexShader* mSphereVS = nullptr;
+	ID3D11GeometryShader* mSphereGS = nullptr;
+	PipelineStateObject mSpherePSO;
+
 	ID3D11PixelShader* mLightPS = nullptr;
 	PipelineStateObject mLightPSO;
 

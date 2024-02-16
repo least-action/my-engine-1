@@ -23,6 +23,11 @@ class Sphere {
         MathUtils::Matrix mWorld;
     };
 
+    struct CenterConstantBuffer
+    {
+        MathUtils::Point Pos;
+    };
+
     struct Model
     {
         MathUtils::Point Pos;
@@ -33,8 +38,10 @@ class Sphere {
     ID3D11Buffer* mVertexBuffer = nullptr;
     ID3D11Buffer* mIndexBuffer = nullptr;
     ID3D11Buffer* worldContantBuffer = nullptr;
+    ID3D11Buffer* centerBuffer = nullptr;
     ID3D11VertexShader* mVertexShader = nullptr;
     ID3D11PixelShader* mPixelShader = nullptr;
+    ID3D11GeometryShader* mGeometryShader = nullptr;
     ID3D11InputLayout* mInputLayout = nullptr;
     
     ID3D11Texture2D* mTexture = nullptr;
@@ -160,6 +167,17 @@ public:
             printf("CreateBuffer(mSurfaceWorldConstantBuffer) error : %08X\n", hr);
             throw std::runtime_error("");
         }
+
+        ZeroMemory(&bd, sizeof(bd));
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = sizeof(CenterConstantBuffer);
+        bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        bd.CPUAccessFlags = 0;
+        hr = device->CreateBuffer(&bd, NULL, &centerBuffer);
+        if (FAILED(hr)) {
+            printf("CreateBuffer(centerBuffer) error : %08X\n", hr);
+            throw std::runtime_error("");
+        }
     }
 
     void Render(ID3D11DeviceContext* context, ID3D11Buffer* sharedContantBuffer)
@@ -176,6 +194,9 @@ public:
         auto rotation = MathUtils::BuildRotation(model.RotateAxis, model.RotateRadian);
         wb.mWorld = (transition * rotation).Transposed();
         context->UpdateSubresource(worldContantBuffer, 0, NULL, &wb, 0, 0);
+        CenterConstantBuffer cb;
+        cb.Pos = {0.0f, radius, 0.0f};
+        context->UpdateSubresource(centerBuffer, 0, NULL, &cb, 0, 0);
 
         UINT stride = sizeof(SimpleVertex);
         UINT offset = 0;
@@ -189,6 +210,8 @@ public:
 
         context->VSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->VSSetConstantBuffers(1, 1, &worldContantBuffer);
+        context->GSSetConstantBuffers(0, 1, &sharedContantBuffer);
+        context->GSSetConstantBuffers(1, 1, &centerBuffer);
         context->PSSetConstantBuffers(0, 1, &sharedContantBuffer);
         context->PSSetShaderResources(0, 1, &mTextureResourceView);
         context->DrawIndexed(indiciesNum, 0, 0);
